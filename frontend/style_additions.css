@@ -1,0 +1,1136 @@
+/* ===== NAYA: Export button (topbar) + Export modal (append to end of style.css) ===== */
+
+.topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.topbar-right {
+    display: flex;
+    align-items: center;
+}
+
+.export-btn {
+    background: #0d6efd;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 18px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+
+.export-btn:hover {
+    background: #0b5ed7;
+}
+
+/* Save Project (secondary topbar button) */
+.export-btn-secondary {
+    background: #2a2f3a;
+    color: #e6e9ef;
+    border: 1px solid #3a4150;
+    margin-right: 8px;
+    font-weight: 600;
+}
+.export-btn-secondary:hover {
+    background: #343b49;
+}
+
+.topbar-right {
+    gap: 8px;
+}
+
+/* ============================================================
+   PROJECTS PANEL (right side slide-in)
+   ============================================================ */
+.projects-panel {
+    position: fixed;
+    top: 56px;
+    right: 12px;
+    width: 320px;
+    max-height: calc(100vh - 80px);
+    background: #1b1f27;
+    border: 1px solid #3a4150;
+    border-radius: 10px;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.55);
+    display: none;
+    flex-direction: column;
+    z-index: 1200;
+    overflow: hidden;
+}
+.projects-panel.open {
+    display: flex;
+}
+.projects-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 12px;
+    font-weight: 700;
+    font-size: 14px;
+    color: #e6e9ef;
+    border-bottom: 1px solid #2a2f3a;
+    background: #222734;
+}
+.projects-actions {
+    display: flex;
+    gap: 8px;
+    padding: 10px 12px;
+}
+.pj-name-input {
+    flex: 1;
+    background: #12151c;
+    border: 1px solid #3a4150;
+    border-radius: 6px;
+    color: #e6e9ef;
+    padding: 7px 10px;
+    font-size: 13px;
+    outline: none;
+}
+.pj-name-input:focus {
+    border-color: #2fb8a6;
+}
+.pj-action-btn {
+    border: none;
+    border-radius: 6px;
+    padding: 7px 14px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+}
+.pj-action-btn.pj-save {
+    background: #2fb8a6;
+    color: #08211d;
+}
+.pj-action-btn.pj-save:hover {
+    background: #35cdb8;
+}
+.projects-hint {
+    padding: 0 12px 6px;
+    font-size: 12px;
+    color: #8fd3c8;
+    min-height: 18px;
+}
+.projects-hint.error {
+    color: #ff6b6b;
+}
+.projects-list {
+    overflow-y: auto;
+    padding: 4px 8px 10px;
+}
+.pj-empty {
+    padding: 14px 8px;
+    font-size: 12px;
+    color: #9aa3b2;
+    text-align: center;
+}
+.pj-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 8px;
+    border-radius: 8px;
+    border: 1px solid transparent;
+}
+.pj-row:hover {
+    background: #222734;
+    border-color: #2a2f3a;
+}
+.pj-row-info {
+    min-width: 0;
+    flex: 1;
+}
+.pj-row-name {
+    font-size: 13px;
+    font-weight: 700;
+    color: #e6e9ef;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.pj-row-sub {
+    font-size: 11px;
+    color: #9aa3b2;
+    margin-top: 2px;
+}
+.pj-row-actions {
+    display: flex;
+    gap: 4px;
+    flex-shrink: 0;
+}
+.pj-mini-btn,
+.kb-mini-btn {
+    background: #2a2f3a;
+    color: #cfd6e0;
+    border: 1px solid #3a4150;
+    border-radius: 5px;
+    font-size: 11px;
+    padding: 4px 8px;
+    cursor: pointer;
+}
+.pj-mini-btn:hover,
+.kb-mini-btn:hover {
+    background: #343b49;
+}
+.pj-mini-btn.pj-open {
+    background: #2fb8a6;
+    color: #08211d;
+    border-color: transparent;
+    font-weight: 700;
+}
+.pj-mini-btn.pj-open:hover {
+    background: #35cdb8;
+}
+.pj-mini-btn.pj-danger:hover {
+    background: #7a2e2e;
+    color: #ffd9d9;
+    border-color: #a33;
+}
+
+/* ============================================================
+   KEYBINDINGS PANEL
+   ============================================================ */
+.keybind-panel {
+    position: fixed;
+    top: 56px;
+    right: 12px;
+    width: 340px;
+    max-height: calc(100vh - 80px);
+    background: #1b1f27;
+    border: 1px solid #3a4150;
+    border-radius: 10px;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.55);
+    display: none;
+    flex-direction: column;
+    z-index: 1200;
+    overflow: hidden;
+}
+.keybind-panel.open {
+    display: flex;
+}
+.keybind-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 12px;
+    font-weight: 700;
+    font-size: 14px;
+    color: #e6e9ef;
+    border-bottom: 1px solid #2a2f3a;
+    background: #222734;
+}
+.keybind-header-actions {
+    display: flex;
+    gap: 6px;
+}
+.keybind-hint {
+    padding: 8px 12px 4px;
+    font-size: 11px;
+    color: #9aa3b2;
+}
+.keybind-list {
+    overflow-y: auto;
+    padding: 6px 8px 10px;
+}
+.kb-action-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 5px 6px;
+    border-radius: 6px;
+}
+.kb-action-row:hover {
+    background: #222734;
+}
+.kb-action-label {
+    font-size: 12.5px;
+    color: #cfd6e0;
+}
+.kb-key-btn {
+    display: inline-flex; align-items: center;
+    padding: 2px 8px; border-radius: 6px;
+    background: #2a2a35; color: #e8e8f0;
+    border: 1px solid #3d3d4d; font-size: 11px; font-weight: 600;
+    cursor: pointer; white-space: nowrap;
+}
+/* multi-key chips + add-button (naye panel) */
+.kb-keys-wrap { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; min-width: 0; }
+.kb-key-chip {
+    display: inline-flex; align-items: center;
+    padding: 2px 8px; border-radius: 6px;
+    background: #2a2a35; color: #e8e8f0;
+    border: 1px solid #3d3d4d; font-size: 11px; font-weight: 600;
+    cursor: pointer; white-space: nowrap;
+}
+.kb-key-chip:hover { background: #3a3a4a; border-color: #5a5a7a; }
+.kb-key-chip.empty { color: #666; font-style: italic; cursor: default; }
+.kb-key-add {
+    padding: 2px 8px; border-radius: 6px;
+    background: transparent; color: #8f8ff0;
+    border: 1px dashed #5a5a8a; font-size: 11px; font-weight: 600;
+    cursor: pointer; white-space: nowrap;
+}
+.kb-key-add:hover { background: rgba(120, 120, 255, 0.12); }
+.kb-key-add.capturing { color: #ffd166; border-color: #ffd166; animation: kb-pulse 0.9s infinite; }
+.kb-action-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.kb-action-label { flex: 0 0 auto; min-width: 40%; }
+    background: #12151c;
+    border: 1px solid #3a4150;
+    border-radius: 5px;
+    color: #8fd3c8;
+    font-family: monospace;
+    font-size: 12px;
+    padding: 3px 10px;
+    min-width: 90px;
+    cursor: pointer;
+}
+.kb-key-btn:hover {
+    border-color: #2fb8a6;
+}
+.kb-key-btn.capturing {
+    border-color: #f0b429;
+    color: #f0b429;
+    animation: kb-pulse 1s infinite;
+}
+@keyframes kb-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.55; }
+}
+
+/* ===== A/D segment-marker flags ===== */
+.marker-overlay {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 55;
+}
+.seg-marker-flag {
+    position: absolute;
+    top: 0;
+    width: 2px;
+    height: 100%;
+}
+.seg-marker-flag.start {
+    background: #f0b429;
+    box-shadow: 0 0 6px rgba(240, 180, 41, 0.8);
+}
+.seg-marker-flag.start::before {
+    content: "S";
+    position: absolute;
+    top: 2px;
+    left: 3px;
+    font-size: 9px;
+    font-weight: 800;
+    color: #f0b429;
+}
+.seg-marker-flag.end {
+    background: #ff6b6b;
+    box-shadow: 0 0 6px rgba(255, 107, 107, 0.8);
+}
+.seg-marker-flag.end::before {
+    content: "E";
+    position: absolute;
+    top: 2px;
+    left: 3px;
+    font-size: 9px;
+    font-weight: 800;
+    color: #ff6b6b;
+}
+
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-box {
+    background: var(--bg-panel, #1e1e1e);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 10px;
+    padding: 24px;
+    width: 380px;
+    max-width: 90vw;
+    color: #fff;
+    font-family: Arial, sans-serif;
+}
+
+.modal-box h3 {
+    margin: 0 0 16px 0;
+}
+
+.modal-field {
+    margin-bottom: 16px;
+}
+
+.modal-field > label {
+    display: block;
+    font-size: 13px;
+    opacity: 0.8;
+    margin-bottom: 6px;
+}
+
+.modal-radio-row {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.modal-radio-row label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.modal-progress {
+    margin: 16px 0;
+}
+
+.modal-progress-bar {
+    width: 100%;
+    height: 10px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.modal-progress-fill {
+    height: 100%;
+    width: 0%;
+    background: #0d6efd;
+    transition: width 0.3s;
+}
+
+.modal-progress-label {
+    margin-top: 8px;
+    font-size: 13px;
+    opacity: 0.8;
+    text-align: center;
+}
+
+.modal-result {
+    margin: 16px 0;
+    text-align: center;
+}
+
+.export-download-btn {
+    display: inline-block;
+    background: #2fb8a6;
+    color: #fff;
+    text-decoration: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-weight: 700;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+/* ===== FIX: Tools-row ab 2 fixed rows mein hai =====
+   Line 1: Play → Auto Captions tak ke buttons (scroll without wrap)
+   Line 2: Undo / Redo / GAP FILL / Speed
+   Pehle flex-wrap sab kuch random jagah todta tha (Undo/Redo/Speed neeche
+   idhar-udhar gir jate the) */
+.tools-row {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 6px 10px 4px 10px;
+    background: var(--bg-panel);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+}
+
+.tools-line {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: thin;
+}
+.tools-line::-webkit-scrollbar { height: 5px; }
+.tools-line::-webkit-scrollbar-thumb { background: #3c3c44; border-radius: 3px; }
+.tools-line::-webkit-scrollbar-track { background: transparent; }
+
+.tools-line .time-display { margin-left: auto; }
+
+/* ===== FIX: Timeline scrollbars HAMESHA visible (horizontal + vertical) =====
+   IMPORTANT: standard `scrollbar-width/scrollbar-color` properties use MAT karo —
+   naye Chromium/WebView2 mein ye Fluent OVERLAY scrollbars on kar dete hain jis
+   se ::-webkit-scrollbar rules ignore ho jati hain aur bars gayab ho jati hain.
+   Classic hamesha-dikhnе wali bars ke liye: sirf ::-webkit-scrollbar styling +
+   overflow ko `scroll` par force karo (auto ki jagah, taake gutters hamesha
+   render hon). */
+.timeline-scroll {
+    overflow-x: scroll;   /* horizontal bar HAMESHA */
+    overflow-y: scroll;   /* vertical bar HAMESHA (layers resize par) */
+}
+
+.timeline-scroll::-webkit-scrollbar {
+    -webkit-appearance: none;
+    width: 12px;    /* vertical bar */
+    height: 12px;   /* horizontal bar */
+}
+
+.timeline-scroll::-webkit-scrollbar-track {
+    background: #1a1a1d;
+    border-left: 1px solid #2a2a30;
+    border-top: 1px solid #2a2a30;
+}
+
+.timeline-scroll::-webkit-scrollbar-thumb {
+    background: #55555e;
+    border-radius: 3px;
+    border: 2px solid #1a1a1d;
+}
+
+.timeline-scroll::-webkit-scrollbar-thumb:hover {
+    background: #6c6c78;
+}
+
+.timeline-scroll::-webkit-scrollbar-corner {
+    background: #1a1a1d;
+}
+
+/* ===== LEFT COLUMN (media-bin + captions panel stack) ===== */
+.left-column {
+    width: 240px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.left-column .media-bin {
+    flex: 1 1 55%;
+    min-height: 0;
+}
+
+/* FIX: media-bin collapse hone par Captions panel bhi poora chhup jata hai
+   aur left-column bhi narrow (42px) ho jata hai */
+.captions-panel.cp-hidden { display: none; }
+.left-column.bin-collapsed { width: 42px; }
+.left-column.bin-collapsed .media-bin { border-right: none; }
+
+/* ===== CAPTIONS PANEL (media-bin ke neeche) ===== */
+.captions-panel {
+    flex: 1 1 45%;
+    min-height: 130px;
+    background: var(--bg-panel);
+    border-top: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.cp-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px;
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+}
+.cp-title { font-weight: 600; font-size: 13px; flex: 1; }
+.cp-enable { display: flex; align-items: center; gap: 4px; font-size: 11px; color: var(--text-dim); cursor: pointer; }
+.cp-toggle { cursor: pointer; color: var(--text-dim); font-size: 13px; padding: 0 4px; }
+
+.cp-body {
+    padding: 10px 12px;
+    overflow-y: auto;
+    font-size: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+.cp-body::-webkit-scrollbar { width: 8px; }
+.cp-body::-webkit-scrollbar-thumb { background: #3c3c44; border-radius: 4px; }
+
+.cp-label {
+    display: block;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-dim);
+    margin-top: 6px;
+}
+.cp-hint { font-weight: 400; opacity: 0.7; }
+
+.cp-select {
+    width: 100%;
+    background: var(--bg-panel-3);
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    padding: 6px 8px;
+    font-size: 12px;
+}
+
+.cp-color-grid {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 4px 8px;
+    align-items: center;
+}
+.cp-color-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11px;
+    cursor: pointer;
+}
+.cp-color-grid input[type="color"] {
+    width: 44px;
+    height: 24px;
+    padding: 0;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    background: var(--bg-panel-3);
+    cursor: pointer;
+}
+.cp-color-grid input[type="color"]:disabled { opacity: 0.35; cursor: not-allowed; }
+
+.cp-slider { width: 100%; accent-color: #2fb8a6; }
+
+.cp-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 8px;
+}
+.cp-remember { display: flex; align-items: center; gap: 5px; font-size: 11px; cursor: pointer; }
+.cp-reset-btn {
+    background: var(--bg-panel-3);
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    padding: 4px 10px;
+    font-size: 11px;
+    cursor: pointer;
+}
+.cp-reset-btn:hover { background: #3a3a41; }
+
+.cp-hint-line { font-size: 10px; color: var(--text-dim); opacity: 0.75; margin-top: 4px; }
+
+/* ===== CUSTOM HORIZONTAL SCROLLBAR =====
+   WebView2/Chromium ki native overlay-scrollbar par depend karna unreliable
+   hai (kabhi render hoti kabhi nahi). Ye apna bar hai — HAMESHA visible,
+   click + drag dono se kaam karta hai. JS iski thumb position khud update
+   karta hai (updateCustomHScrollbar). */
+.h-scroll-bar {
+    height: 12px;
+    background: #1a1a1d;
+    border-top: 1px solid #2a2a30;
+    position: relative;
+    flex-shrink: 0;
+    cursor: pointer;
+    user-select: none;
+}
+.h-scroll-thumb {
+    position: absolute;
+    top: 2px;
+    bottom: 2px;
+    min-width: 36px;
+    background: #55555e;
+    border-radius: 4px;
+    cursor: grab;
+}
+.h-scroll-thumb:hover { background: #6c6c78; }
+.h-scroll-thumb.dragging { background: #7c7c88; cursor: grabbing; }
+
+/* panel ko flex-column banao taake .timeline-body upar flex:1 le aur scrollbar
+   ke liye neeche 12px hamesha bache (warna bar panel se bahar chali jati) */
+.timeline-panel {
+    display: flex;
+    flex-direction: column;
+}
+.timeline-panel .timeline-body {
+    flex: 1 1 auto;
+    min-height: 0;
+    height: auto;
+}
+
+/* ============================================================
+   2-STACK SPOTLIGHT (Add Stack)
+   ============================================================ */
+
+/* Stack-2 rows: sirf stack2-active body par dikhte hain (dropdown style) */
+.stack2-track,
+.stack2-label { display: none; }
+body.stack2-active .stack2-track,
+body.stack2-active .stack2-label { display: flex; }
+body.stack2-active .track-row.stack2-track { display: block; }
+.stack2-label { color: #b9a7ff; }
+.stack2-label em {
+    font-style: normal;
+    font-size: 9px;
+    background: #6c5ce7;
+    color: #fff;
+    border-radius: 3px;
+    padding: 1px 4px;
+    margin-left: 4px;
+}
+.stack2-label .label-dot { opacity: 0.85; }
+
+/* S2 blocks ka alag tint — turant pata chale ke ye doosri stack hai */
+.video-block.stack2 { box-shadow: inset 0 0 0 2px rgba(108, 92, 231, 0.85); }
+.video-block.stack2 .seg-label { color: #b9a7ff; }
+.segment-block.stack2 { box-shadow: inset 0 0 0 2px rgba(108, 92, 231, 0.85); }
+.segment-block.stack2 .seg-label { color: #b9a7ff; }
+.audio-block.stack2 { box-shadow: inset 0 0 0 2px rgba(108, 92, 231, 0.85); }
+.audio-block.stack2 .seg-label { color: #b9a7ff; }
+
+/* S2 video-row drag-drop hover state */
+.stack2-track.drop-hover {
+    outline: 2px dashed #8f7bff;
+    outline-offset: -2px;
+    background: rgba(108, 92, 231, 0.15);
+}
+
+/* Add-Stack toggle button active state */
+.tool-btn.stack2-toggle-btn.active {
+    background: #6c5ce7;
+    border-color: #8f7bff;
+    color: #fff;
+}
+
+/* Spotlight controls (preview panel ke neeche) */
+.spotlight-ctrls {
+    margin-top: 8px;
+    padding: 10px;
+    background: #1d1d22;
+    border: 1px solid #6c5ce7;
+    border-radius: 8px;
+    display: none;
+    /* FIX: options kat rahe the — panel scrollable + hamesha saare options */
+    max-height: 46vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: thin;
+    scrollbar-color: #6c5ce7 #26262c;
+}
+.spotlight-ctrls::-webkit-scrollbar { width: 8px; }
+.spotlight-ctrls::-webkit-scrollbar-track { background: #26262c; border-radius: 4px; }
+.spotlight-ctrls::-webkit-scrollbar-thumb { background: #6c5ce7; border-radius: 4px; }
+.spotlight-ctrls::-webkit-scrollbar-thumb:hover { background: #8f7bff; }
+.spotlight-ctrls .sp-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+.spotlight-ctrls .sp-row:last-child { margin-bottom: 0; }
+.spotlight-ctrls .sp-label { font-size: 11px; color: #b9a7ff; min-width: 38px; }
+.spotlight-ctrls .sp-val { font-size: 11px; color: #fff; min-width: 44px; text-align: right; }
+.spotlight-ctrls input[type="range"] { flex: 1; accent-color: #8f7bff; }
+.spotlight-ctrls .sp-styles { gap: 6px; flex-wrap: wrap; }
+.sp-style-btn {
+    flex: 1 1 30px;
+    min-width: 34px;
+    background: #2a2a30;
+    color: #ccc;
+    border: 1px solid #3a3a42;
+    border-radius: 6px;
+    font-size: 14px;
+    line-height: 1;
+    padding: 6px 4px;
+    cursor: pointer;
+}
+.sp-style-btn:hover { background: #35353d; }
+.sp-style-btn.active {
+    background: #6c5ce7;
+    border-color: #8f7bff;
+    color: #fff;
+}
+
+/* ============================================================
+   TITLES LAYER (9:16 heading engine) — panel + timeline layer row
+   ============================================================ */
+.titles-panel {
+    margin-top: 8px;
+    padding: 10px;
+    background: #1d1d22;
+    border: 1px solid #ff7ab8;
+    border-radius: 8px;
+    max-height: 46vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: thin;
+    scrollbar-color: #ff7ab8 #26262c;
+}
+.titles-panel .cp-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.titles-panel .cp-title { color: #ff7ab8; font-size: 12px; font-weight: 700; }
+.titles-panel .cp-toggle { cursor: pointer; color: #999; font-size: 12px; }
+.titles-panel .cp-body .cp-label { display: block; font-size: 11px; color: #b9a7ff; margin-top: 6px; }
+.titles-panel .cp-body .cp-hint { color: #777; font-size: 10px; }
+.titles-panel .tp-text-input {
+    width: 100%;
+    box-sizing: border-box;
+    margin-top: 4px;
+    background: #2a2a30;
+    color: #fff;
+    border: 1px solid #3a3a42;
+    border-radius: 6px;
+    font-size: 12px;
+    padding: 6px 8px;
+}
+.titles-panel .tp-template-grid { display: flex; flex-wrap: wrap; gap: 5px; }
+.titles-panel .tp-template-btn {
+    background: #2a2a30;
+    color: #ccc;
+    border: 1px solid #3a3a42;
+    border-radius: 6px;
+    font-size: 10.5px;
+    padding: 5px 8px;
+    cursor: pointer;
+}
+.titles-panel .tp-template-btn:hover { background: #35353d; }
+.titles-panel .tp-template-btn.active { background: #ff7ab8; border-color: #ffa8cd; color: #2a0a18; font-weight: 600; }
+/* align-buttons (Left/Center/Right) — template-buttons jaisa look, chhota */
+.titles-panel .tp-align-btn { min-width: 0; padding: 4px 6px; font-size: 11px; }
+.titles-panel .tp-align-btn.active { background: #ff7ab8; border-color: #ffa8cd; color: #2a0a18; font-weight: 700; }
+.titles-panel .cp-hint-line { margin-top: 8px; font-size: 10px; color: #777; }
+
+/* timeline: titles layer-row + spans (pink heading-tint — captions wale se alag) */
+.track-titles { background: rgba(255, 122, 184, 0.04); }
+.title-span {
+    background: linear-gradient(180deg, #7a2c4e, #5a1e38);
+    border: 1px solid #ff7ab8;
+    border-radius: 4px;
+}
+.title-span.selected { border-color: #ffd42a; box-shadow: 0 0 0 1px #ffd42a; }
+.label-dot-titles { color: #ff7ab8; font-size: 10px; }
+
+/* ============================================================
+   COLOR GRADE PANEL (Phase 1)
+   ============================================================ */
+.cg-panel {
+    margin-top: 8px;
+    padding: 10px;
+    background: #1d1d22;
+    border: 1px solid #2fb8a6;
+    border-radius: 8px;
+    display: none;
+}
+.cg-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    color: #7fe0d3;
+    font-size: 12px;
+    font-weight: 700;
+}
+.cg-mini-btn {
+    background: #2a2a30;
+    color: #ccc;
+    border: 1px solid #3a3a42;
+    border-radius: 5px;
+    font-size: 11px;
+    padding: 2px 8px;
+    cursor: pointer;
+}
+.cg-presets {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-bottom: 10px;
+}
+.cg-preset-btn {
+    background: #2a2a30;
+    color: #ccc;
+    border: 1px solid #3a3a42;
+    border-radius: 6px;
+    font-size: 10.5px;
+    padding: 4px 8px;
+    cursor: pointer;
+}
+.cg-preset-btn:hover { background: #35353d; }
+.cg-preset-btn.active {
+    background: #2fb8a6;
+    border-color: #57d6c4;
+    color: #fff;
+}
+.cg-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 7px;
+}
+.cg-label { font-size: 11px; color: #7fe0d3; min-width: 72px; }
+.cg-val { font-size: 11px; color: #fff; min-width: 40px; text-align: right; }
+.cg-row input[type="range"] { flex: 1; accent-color: #2fb8a6; }
+.cg-footer {
+    display: flex;
+    gap: 6px;
+    margin-top: 8px;
+}
+.cg-ba-btn {
+    flex: 1;
+    background: #2a2a30;
+    color: #ccc;
+    border: 1px solid #3a3a42;
+    border-radius: 6px;
+    font-size: 11px;
+    padding: 6px;
+    cursor: pointer;
+    user-select: none;
+}
+.cg-ba-btn:active { background: #2fb8a6; color: #fff; }
+.cg-reset-btn {
+    background: #2a2a30;
+    color: #ccc;
+    border: 1px solid #3a3a42;
+    border-radius: 6px;
+    font-size: 11px;
+    padding: 6px 10px;
+    cursor: pointer;
+}
+.cg-reset-btn:hover { background: #35353d; }
+
+/* ======================================================================
+   NAYE TIMELINE LAYERS (Captions / Transitions / Crop and Zoom / Grade)
+   ====================================================================== */
+.track-layer { background: #191922; }
+.track-captions { background: #1a1a24; }
+.track-titles { background: #221a20; }
+.track-transitions { background: #201a12; }
+.track-pz { background: #141a22; }
+.track-grade { background: #1a1620; }
+
+.label-dot-captions { background: #e8a0ff; }
+.label-dot-titles { background: #ff7ab8; }
+.label-dot-transitions { background: #ffcc66; }
+.label-dot-pz { background: #66d9ff; }
+.label-dot-grade { background: #ff9a7a; }
+
+/* span blocks — sab naye layers ka common block (segment-block jaisa) */
+.layer-span {
+    position: absolute;
+    top: 3px;
+    bottom: 3px;
+    border-radius: 4px;
+    cursor: grab;
+    display: flex;
+    align-items: center;
+    padding: 0 6px;
+    overflow: hidden;
+    pointer-events: auto;
+    border: 1px solid #666;
+    background: #333;
+}
+.layer-span.selected { background: #d4b100 !important; border-color: #ffe066 !important; box-shadow: 0 0 0 1px #ffe066; }
+.layer-span.selected .seg-label { color: #1b1b1d; }
+.layer-span .seg-handle { position: absolute; top: 0; bottom: 0; width: 6px; cursor: ew-resize; pointer-events: auto; }
+.layer-span .seg-handle-left { left: 0; }
+.layer-span .seg-handle-right { right: 0; }
+
+/* per-layer tints */
+.layer-span.cap-span { background: #5a2d7a; border-color: #b06ee0; }
+.layer-span.title-span { background: #7a2c4e; border-color: #ff7ab8; }
+.layer-span.trans-span { background: #7a5a1f; border-color: #e0b25a; }
+.layer-span.pz-span { background: #1f4a5a; border-color: #5ab0e0; }
+.layer-span.grade-span { background: #6a3a2d; border-color: #e08a5a; }
+
+.layer-spans { position: absolute; inset: 0; }
+
+/* ===== SUBTITLES PANEL ===== */
+.subtitles-panel {
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--bg-panel);
+    margin-top: 6px;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+.sub-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 7px 10px; cursor: pointer; user-select: none;
+    font-weight: 700; font-size: 12px;
+}
+.sub-toggle { color: var(--text-dim); }
+.sub-body { padding: 0 10px 8px; }
+.sub-list {
+    max-height: 180px; overflow-y: auto;
+    background: #141416; border: 1px solid var(--border); border-radius: 4px;
+    font-size: 11px; padding: 6px;
+}
+.sub-cue { padding: 3px 4px; border-bottom: 1px solid #232327; display: flex; gap: 8px; }
+.sub-cue-time { color: #7ab7ff; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.sub-actions { display: flex; gap: 8px; margin-top: 8px; }
+.sub-dl-btn {
+    flex: 1; padding: 7px 10px; border-radius: 5px; border: 1px solid var(--border);
+    background: #2c5a8f; color: #fff; font-weight: 700; cursor: pointer; font-size: 12px;
+}
+.sub-dl-btn:hover { background: #3a6fab; }
+.sub-hint { font-size: 10px; color: var(--text-dim); margin-top: 6px; }
+
+/* ===== SHORTS CANVAS PANEL (media-bin — captions/subtitles jaisi window) ===== */
+.shorts-panel {
+    border: 1px solid #2f7a4f; border-radius: 6px;
+    background: var(--bg-panel); padding: 8px 10px; margin-top: 8px;
+    position: relative; z-index: 40;
+    flex-shrink: 0;
+    max-height: 72%;
+    overflow-y: auto;
+    box-shadow: 0 4px 18px rgba(0,0,0,0.55);
+}
+/* Media-bin COLLAPSE ho to bhi shorts-panel dikhe — strip ke baghair float */
+.left-column { position: relative; }
+.left-column.bin-collapsed { overflow: visible; } /* floating panel clip na ho */
+.left-column.bin-collapsed .shorts-panel {
+    position: absolute;
+    bottom: 6px;
+    left: 46px;
+    width: 230px;
+    max-height: 80%;
+    z-index: 80;
+}
+.shorts-header { display: flex; justify-content: space-between; align-items: center; font-weight: 700; margin-bottom: 6px; }
+/* NUMERIC READOUT — size/position ke exact digits (hamesha visible) */
+.sc-readout {
+    background: #101014; border: 1px solid #2f7a4f; border-radius: 5px;
+    padding: 6px 8px; margin-bottom: 8px;
+}
+.sc-ro-row { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.sc-ro-row + .sc-ro-row { margin-top: 4px; }
+.sc-ro-label { font-size: 10px; color: var(--text-dim); white-space: nowrap; }
+.sc-ro-edit { display: flex; align-items: center; gap: 3px; font-size: 11px; color: #7dffb8; font-family: Consolas, monospace; }
+.sc-ro-edit input {
+    width: 44px; background: #0a0a0c; border: 1px solid #2f7a4f; border-radius: 4px;
+    color: #7dffb8; font-family: Consolas, monospace; font-size: 12px; font-weight: 700;
+    padding: 2px 4px; text-align: center;
+}
+.sc-ro-edit input:focus { outline: none; border-color: #2fd07a; box-shadow: 0 0 0 1px #2fd07a; }
+/* number-input spinners chhupo (chhoti fields) */
+.sc-ro-edit input::-webkit-outer-spin-button,
+.sc-ro-edit input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.sc-modes { display: flex; gap: 6px; margin-bottom: 6px; }
+.sc-mode-btn {
+    flex: 1; padding: 6px 8px; border-radius: 5px; border: 1px solid var(--border);
+    background: #1c1c20; color: var(--text-dim); cursor: pointer; font-size: 11px; font-weight: 600;
+}
+.sc-mode-btn.active { background: #1f5a35; color: #fff; border-color: #2fd07a; }
+.shorts-actions { display: flex; gap: 6px; }
+.shorts-actions .trans-add-btn { flex: 1; }
+.shorts-actions .pz-danger-btn { flex: 1; }
+
+/* ===== TRANSITIONS PANEL ===== */
+.trans-panel {
+    border: 1px solid var(--border); border-radius: 6px;
+    background: var(--bg-panel); padding: 8px 10px; margin-top: 8px;
+}
+.trans-header { display: flex; justify-content: space-between; align-items: center; font-weight: 700; margin-bottom: 6px; }
+.trans-select { flex: 1; background: #1c1c20; color: #fff; border: 1px solid var(--border); border-radius: 4px; padding: 3px 6px; font-size: 12px; }
+.trans-hint { font-size: 10px; color: var(--text-dim); margin-top: 6px; }
+
+/* ===== CROP AND ZOOM (PAN & ZOOM) PANEL ===== */
+.pz-panel {
+    border: 1px solid var(--border); border-radius: 6px;
+    background: var(--bg-panel); padding: 8px 10px; margin-top: 8px;
+}
+.pz-header { display: flex; justify-content: space-between; align-items: center; font-weight: 700; margin-bottom: 6px; }
+.pz-modes { display: flex; gap: 6px; margin-bottom: 6px; }
+.pz-mode-btn {
+    flex: 1; padding: 5px 8px; border-radius: 5px; border: 1px solid var(--border);
+    background: #1c1c20; color: var(--text-dim); cursor: pointer; font-size: 11px; font-weight: 600;
+}
+.pz-mode-btn.active { background: #1f4a5a; color: #fff; border-color: #5ab0e0; }
+.pz-hint { font-size: 10px; color: var(--text-dim); margin-bottom: 6px; }
+.pz-actions { display: flex; gap: 6px; }
+.pz-danger-btn {
+    flex: 1; padding: 6px; border-radius: 5px; border: 1px solid #7a2d2d;
+    background: #5a1f1f; color: #ffb0b0; cursor: pointer; font-size: 11px; font-weight: 700;
+}
+
+/* ===== TRANSITIONS GALLERY (media-bin panel — animated type previews) ===== */
+.trans-panel { border-color: #8a6a2f; }
+.cg-target-label { font-weight: 400; font-size: 10px; color: var(--text-dim); }
+.trans-type-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+    margin-bottom: 8px;
+}
+.trans-type-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 6px 4px;
+    border-radius: 6px;
+    border: 1px solid #3a3a42;
+    background: #1c1c20;
+    color: #ccc;
+    font-size: 10px;
+    font-weight: 600;
+    cursor: pointer;
+}
+.trans-type-btn:hover { background: #26262c; }
+.trans-type-btn.active { background: #7a5a1f; border-color: #e0b25a; color: #fff; }
+
+/* mini demo — dono clips ka fake crossfade loop */
+.trans-demo {
+    position: relative;
+    width: 100%;
+    max-width: 64px;
+    height: 30px;
+    border-radius: 4px;
+    overflow: hidden;
+    background: #30363f;
+}
+.trans-demo::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, #2fb8a6 0%, #1f6f8f 100%);
+}
+.trans-demo::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, #8f5a2f 0%, #b03a6a 100%);
+    animation: demoCycle 2.4s infinite;
+}
+.demo-fadein::after { background: #000; animation-name: demoFadeIn; }
+.demo-fadeout::after { background: #000; animation-name: demoFadeOut; }
+.demo-crossfade::after { animation-name: demoCrossfade; }
+.demo-slideleft::after { animation-name: demoSlideLeft; }
+.demo-slideright::after { animation-name: demoSlideRight; }
+.demo-zoomin::after { animation-name: demoZoomIn; }
+
+@keyframes demoFadeIn     { 0%, 20% { opacity: 1; } 60%, 100% { opacity: 0; } }
+@keyframes demoFadeOut    { 0%, 20% { opacity: 0; } 60%, 100% { opacity: 1; } }
+@keyframes demoCrossfade  { 0%, 15% { opacity: 0; } 50% { opacity: 0.5; } 85%, 100% { opacity: 1; } }
+@keyframes demoSlideLeft  { 0%, 20% { transform: translateX(100%); } 70%, 100% { transform: translateX(0); } }
+@keyframes demoSlideRight { 0%, 20% { transform: translateX(-100%); } 70%, 100% { transform: translateX(0); } }
+@keyframes demoZoomIn     { 0%, 20% { transform: scale(1); opacity: 1; } 70%, 100% { transform: scale(1.7); opacity: 0.85; } }
+
+.trans-actions { display: flex; margin-top: 2px; }
+.trans-add-btn {
+    flex: 1;
+    padding: 6px;
+    border-radius: 5px;
+    border: 1px solid #8a6a2f;
+    background: #4a3a15;
+    color: #ffd98a;
+    font-weight: 700;
+    font-size: 11px;
+    cursor: pointer;
+}
+.trans-add-btn:hover { background: #5a4820; }

@@ -1,0 +1,601 @@
+* { box-sizing: border-box; }
+
+:root {
+    --bg-app: #1b1b1d;
+    --bg-panel: #202023;
+    --bg-panel-2: #26262a;
+    --bg-panel-3: #2c2c31;
+    --border: #34343a;
+    --text: #e8e8ea;
+    --text-dim: #98989f;
+    --accent: #2fb8a6;
+    --accent-strong: #22a390;
+    --selected: #ffb020;
+    --playhead: #ff4d4f;
+}
+
+body {
+    margin: 0;
+    font-family: "Segoe UI", Roboto, Arial, sans-serif;
+    background: var(--bg-app);
+    color: var(--text);
+    overflow: hidden;
+}
+
+.topbar {
+    background: var(--bg-panel);
+    padding: 8px 16px;
+    border-bottom: 1px solid var(--border);
+}
+.topbar-left { display: flex; align-items: center; gap: 8px; }
+.brand-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--accent);
+}
+.topbar h2 { margin: 0; font-size: 14px; font-weight: 600; }
+
+.app-body {
+    display: flex;
+    height: calc(100vh - 39px);
+}
+
+/* ===== MEDIA BIN ===== */
+.media-bin {
+    width: 240px;
+    background: var(--bg-panel);
+    border-right: 1px solid var(--border);
+    overflow-y: auto;
+    overflow-x: hidden;
+    transition: width 0.16s ease;
+    flex-shrink: 0;
+}
+.media-bin.collapsed { width: 42px; }
+.media-bin.collapsed .mb-title,
+.media-bin.collapsed .media-bin-content { display: none; }
+.media-bin.collapsed .mb-chevron { transform: rotate(180deg); }
+
+.media-bin-header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    padding: 12px 10px;
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+}
+.mb-icon { font-size: 15px; }
+.mb-title { font-weight: 600; font-size: 13px; flex: 1; }
+.mb-chevron { font-size: 12px; color: var(--text-dim); transition: transform 0.16s ease; }
+
+.media-bin-content { padding: 10px; }
+
+.import-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    background: var(--accent);
+    color: #0d1f1c;
+    font-weight: 600;
+    font-size: 12px;
+    padding: 8px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-bottom: 10px;
+    user-select: none;
+}
+.import-btn:hover { background: var(--accent-strong); }
+.import-plus { font-size: 14px; line-height: 1; }
+
+.video-list { display: flex; flex-direction: column; gap: 4px; }
+.video-list .video-item {
+    background: var(--bg-panel-2);
+    padding: 7px 9px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    border: 1px solid transparent;
+}
+.video-list .video-item:hover { background: var(--bg-panel-3); }
+.video-list .video-item.active { background: var(--accent); color: #0d1f1c; font-weight: 600; }
+
+/* ===== CENTER COLUMN ===== */
+.center-column {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+.center-column.drag-over { outline: 2px dashed var(--accent); outline-offset: -2px; }
+
+.mode-tabs {
+    display: flex;
+    gap: 6px;
+    padding: 8px 10px;
+    background: var(--bg-panel);
+    border-bottom: 1px solid var(--border);
+}
+.mode-tab {
+    background: var(--bg-panel-2);
+    color: var(--text-dim);
+    border: 1px solid var(--border);
+    padding: 6px 14px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 12px;
+}
+.mode-tab:hover { background: var(--bg-panel-3); }
+.mode-tab.active { background: var(--accent); border-color: var(--accent); color: #0d1f1c; font-weight: 600; }
+.mode-tabs.disabled { opacity: 0.35; pointer-events: none; }
+
+.player-row {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #000;
+    min-height: 0;
+    position: relative;
+}
+.video-wrapper { width: 100%; height: 100%; position: relative; }
+#playerCanvas { width: 100%; height: 100%; display: block; }
+
+.player-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 5px 10px;
+    background: var(--bg-panel);
+    border-top: 1px solid var(--border);
+    flex-wrap: wrap;
+}
+
+/* ===== NAYA: video-info-row — speed badge + "|" + filename, sab ek line mein ===== */
+.video-info-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.info-separator {
+    color: var(--text-dim);
+    font-size: 11px;
+}
+.video-info { font-size: 11px; color: var(--text-dim); white-space: nowrap; }
+
+/* speed-control: ab inline pill hai (player-footer ke andar), koi absolute/overlay nahi */
+.speed-control {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 2px 9px;
+    background: var(--bg-panel-2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    cursor: ew-resize;
+    user-select: none;
+    transition: background 0.15s, border-color 0.15s;
+}
+.speed-control:hover {
+    background: var(--bg-panel-3);
+    border-color: #454550;
+}
+.speed-control .speed-icon {
+    font-size: 11px;
+    opacity: 0.8;
+}
+.speed-control .speed-value {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text);
+    min-width: 38px;
+    text-align: center;
+    outline: none;
+    font-variant-numeric: tabular-nums;
+}
+.speed-control.speed-fast .speed-value { color: var(--selected); }
+.speed-control.speed-slow .speed-value { color: var(--accent); }
+.speed-control .speed-value.speed-editing {
+    cursor: text;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    padding: 0 4px;
+}
+.speed-control.speed-disabled {
+    opacity: 0.4;
+    cursor: default;
+    pointer-events: none;
+}
+
+.jump-controls { display: flex; align-items: center; gap: 6px; }
+.jump-label { font-size: 11px; color: var(--text-dim); margin-right: 2px; }
+.jump-field {
+    display: flex; align-items: center; gap: 4px;
+    background: var(--bg-panel-2);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 2px 6px;
+}
+.jump-tag { font-size: 10px; color: var(--text-dim); }
+.time-input {
+    width: 78px;
+    background: transparent;
+    border: none;
+    color: var(--text);
+    font-size: 11px;
+    outline: none;
+    font-variant-numeric: tabular-nums;
+}
+.jump-go {
+    background: var(--bg-panel-3);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-size: 11px;
+    padding: 3px 9px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+.jump-go:hover { background: var(--accent); border-color: var(--accent); color: #0d1f1c; }
+
+.tools-row {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 6px 10px;
+    background: var(--bg-panel);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    flex-wrap: wrap;
+}
+.tool-sep {
+    width: 1px;
+    align-self: stretch;
+    background: var(--border);
+    margin: 2px 4px;
+}
+.tool-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    background: var(--bg-panel-2);
+    color: var(--text);
+    border: 1px solid var(--border);
+    padding: 5px 9px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 10px;
+    line-height: 1.1;
+    min-width: 34px;
+}
+.tool-btn:hover { background: var(--bg-panel-3); border-color: #454550; }
+.tool-btn:active { background: var(--accent); border-color: var(--accent); color: #0d1f1c; }
+.tool-icon { font-size: 14px; }
+.tool-label { font-size: 10px; color: var(--text-dim); white-space: nowrap; }
+.tool-btn:hover .tool-label { color: var(--text); }
+.tool-btn-primary { background: var(--accent); border-color: var(--accent); color: #0d1f1c; }
+.tool-btn-primary:hover { background: var(--accent-strong); }
+
+.time-display {
+    margin-left: auto;
+    font-size: 11px;
+    color: var(--text-dim);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+}
+
+/* ===== TIMELINE ===== */
+.timeline-panel {
+    height: 236px;
+    background: #131315;
+    flex-shrink: 0;
+}
+.timeline-body {
+    display: flex;
+    height: 100%;
+}
+
+/* --- left frozen label column --- */
+.timeline-labels {
+    width: 84px;
+    flex-shrink: 0;
+    background: var(--bg-panel);
+    border-right: 1px solid var(--border);
+    overflow-y: scroll;
+    overflow-x: hidden;
+    scrollbar-width: none;
+}
+.timeline-labels::-webkit-scrollbar { display: none; }
+.label-spacer { height: 36px; flex-shrink: 0; }
+.label-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 0 8px;
+    font-size: 11px;
+    color: var(--text-dim);
+    border-top: 1px solid var(--border);
+    font-weight: 600;
+}
+/* ALignment FIX (BUG 2): resize-handles (5px) sirf TRACKS side par hain —
+   labels column me unke barabar SPACER rows (borders ke sath) add kiye,
+   warna har row ke baad 5px ka offset jama hota jata tha (labels neeche
+   khisakte jate the). Ye rows KOI height add nahi karti — sirf 5px handle
+   ki jagah bhar ti hain. + "＋" add-button (BUG 1) label-row ke andar. */
+.label-resize-spacer {
+    height: 5px;
+    flex-shrink: 0;
+    border-top: 1px solid var(--border);
+}
+.layer-add-btn {
+    margin-left: auto;
+    width: 16px; height: 16px;
+    line-height: 1;
+    padding: 0;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    background: #1c1c20;
+    color: var(--text-dim);
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+.layer-add-btn:hover { background: var(--accent); color: #0d1f1c; border-color: var(--accent); }
+.label-dot { width: 7px; height: 7px; border-radius: 2px; flex-shrink: 0; }
+.label-dot-video { background: #4aa8ff; }
+.label-dot-audio { background: #35d0a8; }
+.label-dot-segment { background: var(--selected); }
+
+/* --- scrollable ruler + tracks area --- */
+.timeline-scroll {
+    flex: 1;
+    overflow: auto;
+    position: relative;
+}
+.timeline-track {
+    position: relative;
+    min-width: 100%;
+}
+
+.ruler-frames {
+    position: sticky;
+    top: 0;
+    left: 0;
+    height: 16px;
+    background: #202024;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+    z-index: 5;
+}
+.ruler-frames.hidden-ruler { background: #1a1a1d; }
+.frame-tick {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    border-left: 1px solid #3a3a41;
+    padding-left: 3px;
+    display: flex;
+    align-items: center;
+}
+.frame-label { font-size: 9px; color: #6c6c74; white-space: nowrap; }
+
+.ruler-seconds {
+    position: sticky;
+    top: 16px;
+    left: 0;
+    height: 20px;
+    background: #26262a;
+    border-bottom: 1px solid var(--border);
+    z-index: 5;
+}
+.ruler-tick {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    border-left: 1px solid #46464e;
+    padding-left: 4px;
+    display: flex;
+    align-items: center;
+}
+.tick-label { font-size: 10px; color: var(--text-dim); white-space: nowrap; font-variant-numeric: tabular-nums; }
+
+/* NOTE: the sticky rulers stick within #timelineScroll while it scrolls vertically;
+   they still move left/right with horizontal scroll since only `top` is pinned. */
+
+.tracks-area { position: relative; }
+.scrub-area { display: flex; flex-direction: column; cursor: pointer; }
+
+.track-row {
+    position: relative;
+    border-top: 1px solid var(--border);
+}
+.track-video { background: #17171a; }
+.track-audio { background: #14201c; }
+.track-segments { background: #1a1a1d; }
+
+.track-resize-handle {
+    height: 5px;
+    background: transparent;
+    cursor: row-resize;
+    position: relative;
+    z-index: 6;
+}
+.track-resize-handle::after {
+    content: "";
+    position: absolute;
+    left: 0; right: 0; top: 2px;
+    height: 1px;
+    background: var(--border);
+}
+.track-resize-handle:hover::after,
+.track-resize-handle.active::after { background: var(--accent); height: 2px; }
+
+.filmstrip { display: flex; height: 100%; }
+.filmstrip img { height: 100%; object-fit: cover; flex-shrink: 0; border-right: 1px solid #000; }
+
+/* video/audio block-layers: sirf blocks click-capture karein, khali jaga se click
+   neeche scrubArea tak "fall through" ho kar playhead seek kare */
+.track-videoblocks { position: absolute; inset: 0; pointer-events: none; }
+.track-audiolane { position: absolute; inset: 0; pointer-events: none; }
+
+.waveform-img {
+    position: absolute;
+    top: 0; left: 0;
+    height: 100%;
+    opacity: 0.85;
+    pointer-events: none;
+}
+
+.playhead {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: var(--playhead);
+    pointer-events: none;
+    z-index: 10;
+}
+.playhead-flag {
+    position: absolute;
+    top: -1px;
+    left: -4px;
+    width: 10px;
+    height: 8px;
+    background: var(--playhead);
+    clip-path: polygon(0 0, 100% 0, 100% 60%, 50% 100%, 0 60%);
+}
+
+/* ===== SEGMENT / AUDIO / VIDEO BLOCKS ===== */
+.segment-block {
+    position: absolute;
+    top: 3px;
+    bottom: 3px;
+    background: #0d47a1;
+    border: 1px solid #2f7dff;
+    border-radius: 4px;
+    cursor: grab;
+    display: flex;
+    align-items: center;
+    padding: 0 6px;
+    overflow: hidden;
+}
+.segment-block.selected { background: #d4b100; border-color: #ffe066; box-shadow: 0 0 0 1px #ffe066; }
+.segment-block.selected .seg-label { color: #1b1b1d; }
+.segment-block.creating { background: rgba(47, 125, 255, 0.25); border: 1px dashed #2f7dff; }
+.seg-label { font-size: 11px; color: #fff; white-space: nowrap; pointer-events: none; }
+.seg-handle { position: absolute; top: 0; bottom: 0; width: 6px; cursor: ew-resize; pointer-events: auto; }
+.seg-handle-left { left: 0; }
+.seg-handle-right { right: 0; }
+
+.video-block {
+    position: absolute;
+    top: 3px;
+    bottom: 3px;
+    background: #2a4f7c;
+    border: 1px solid #4d86c9;
+    border-radius: 4px;
+    cursor: grab;
+    display: flex;
+    align-items: center;
+    padding: 0 6px;
+    overflow: hidden;
+    pointer-events: auto;
+}
+.video-block.selected { background: #d4b100; border-color: #ffe066; box-shadow: 0 0 0 1px #ffe066; }
+.video-block.selected .seg-label { color: #1b1b1d; }
+.video-handle { position: absolute; top: 0; bottom: 0; width: 6px; cursor: ew-resize; pointer-events: auto; }
+.video-handle-left { left: 0; }
+.video-handle-right { right: 0; }
+
+.audio-block {
+    position: absolute;
+    top: 3px;
+    bottom: 3px;
+    background: #14523f;
+    border: 1px solid var(--accent);
+    border-radius: 4px;
+    cursor: grab;
+    display: flex;
+    align-items: center;
+    padding: 0 6px;
+    overflow: hidden;
+    z-index: 1;
+    pointer-events: auto;
+}
+.audio-block.selected { background: #d4b100; border-color: #ffe066; box-shadow: 0 0 0 1px #ffe066; }
+.audio-block.selected .seg-label { color: #1b1b1d; }
+.audio-handle { position: absolute; top: 0; bottom: 0; width: 6px; cursor: ew-resize; pointer-events: auto; }
+.audio-handle-left { left: 0; }
+.audio-handle-right { right: 0; }
+
+/* scrollbar styling (webkit) for a slimmer Filmora-like look */
+.timeline-scroll::-webkit-scrollbar { width: 11px; height: 11px; }
+.timeline-scroll::-webkit-scrollbar-track { background: #1a1a1d; }
+.timeline-scroll::-webkit-scrollbar-thumb { background: #3c3c44; border-radius: 6px; border: 2px solid #1a1a1d; }
+.timeline-scroll::-webkit-scrollbar-thumb:hover { background: #4c4c56; }
+.timeline-scroll::-webkit-scrollbar-corner { background: #1a1a1d; }
+
+.media-bin::-webkit-scrollbar { width: 8px; }
+.media-bin::-webkit-scrollbar-thumb { background: #3c3c44; border-radius: 4px; }
+
+/* ===== PREVIEW PANEL ===== */
+.preview-panel {
+    width: 300px;
+    flex-shrink: 0;
+    background: var(--bg-panel);
+    border-left: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px;
+}
+.preview-panel h3 { font-size: 12px; margin: 0 0 10px 0; color: var(--text-dim); font-weight: 600; }
+#previewCanvas { background: #000; border: 1px solid var(--border); border-radius: 3px; }
+
+/* ===== NEW (Phase 5/6 fixes): per-clip filmstrip, audio-shadow, marquee-select ===== */
+
+/* per-clip filmstrip (replaces the old single global .filmstrip render) */
+.clip-filmstrip {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 0;
+    border-radius: 3px;
+}
+.clip-filmstrip img { height: 100%; object-fit: cover; flex-shrink: 0; border-right: 1px solid #000; }
+
+/* keep label + handles above the filmstrip */
+.video-block .seg-label,
+.video-block .video-handle { position: relative; z-index: 1; }
+
+/* shadow waveform = a video clip's own embedded audio (non-interactive, follows the clip) */
+.audio-shadow {
+    position: absolute;
+    top: 3px;
+    bottom: 3px;
+    border-radius: 4px;
+    opacity: 0.55;
+    background-color: rgba(20, 82, 63, 0.55);
+    pointer-events: none;
+    z-index: 0;
+}
+.audio-shadow.muted { opacity: 0.15; }
+
+/* keep audio-block label + handles above shadows */
+.audio-block { z-index: 2; }
+
+/* press-and-hold marquee (rubber-band) selection */
+.marquee-box {
+    position: absolute;
+    border: 1px solid var(--accent);
+    background: rgba(47, 184, 166, 0.15);
+    z-index: 8;
+    pointer-events: none;
+}

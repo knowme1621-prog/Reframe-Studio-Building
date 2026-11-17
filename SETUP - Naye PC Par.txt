@@ -1,0 +1,136 @@
+================================================================
+ REFRAME STUDIO — NAYE PC PAR SETUP GUIDE
+ (kaise is software ko doosre computer par chalayen)
+================================================================
+
+PEHLE EK BAAAT SAMAJH LO (900MB -> 61MB wala confusion)
+-------------------------------------------------------
+Folder chhota isliye hua ke ab uploads/ aur cache/ session-only
+hain (har session mein auto-delete hote hain) aur exports bhi
+app ke andar hi rehte hain. 61MB = asal CODE ka size hai.
+Code chhota hona koi kami nahi — poora software isi 61MB mein hai.
+
+Is software ko chalane ke liye 3 cheezein chahiye:
+  1. Python (3.10 ya usse naya)
+  2. FFmpeg (video processing ka engine)
+  3. Python libraries (requirements.txt mein likhi hain)
+
+===============================================================
+ TARIKA 1 (RECOMMENDED) — SIMPLE INSTALL
+===============================================================
+
+STEP 1: Folder copy karo
+  - Poora project folder (Reframe Studio) USB/hard-disk se
+    naye PC par copy kar do. Kisi bhi jagah rakh sakte ho,
+    masalan:  D:\Reframe Studio
+
+STEP 2: Python install karo
+  - Browser mein jao:  https://www.python.org/downloads/
+  - Python 3.10+ download kar ke install karo
+  - INSTALL PAR "Add python.exe to PATH" KA CHECKBOX ZAROOR
+    TICK KARO (ye sab se zaroori step hai!)
+  - Verify: CMD kholo, likho:  python --version
+
+STEP 3: FFmpeg install karo
+  - CMD kholo aur likho:
+        winget install Gyan.FFmpeg
+  - Agar winget na ho to: https://www.gyan.dev/ffmpeg/builds/
+    se "ffmpeg-release-full" download karo, zip kholo, aur
+    bin folder ka path system PATH mein add karo.
+  - CMD band kar ke DOBARA kholo, phir verify karo:
+        ffmpeg -version
+
+STEP 4: Python libraries install karo
+  - CMD mein project folder ke andar jao:
+        cd /d "D:\Reframe Studio"
+  - Phir ek hi command:
+        pip install -r requirements.txt
+    (ye sab kuch khud install kar dega — 2-5 minute lagenge)
+
+STEP 5: Chala do!
+  - run.bat par DOUBLE-CLICK karo — bas, app khul jayegi.
+
+===============================================================
+ TARIKA 2 — PORTABLE (FFMPEG INSTALL NAHI KARNA)
+===============================================================
+Agar naye PC par kuch install nahi karna chahte (ya admin
+rights nahi hain), to FFmpeg ko project ke sath hi copy kar do:
+
+STEP 1: Apne PC se ye 2 files copy karo:
+  (winget wale ffmpeg ki location CMD se milo:
+     where ffmpeg  ->  wahan bin folder mein hain)
+     - ffmpeg.exe   (~222 MB)
+     - ffprobe.exe  (~222 MB)
+
+STEP 2: Project folder ke ANDAR "ffmpeg" naam ka folder banao:
+     D:\Reframe Studio\ffmpeg\
+     D:\Reframe Studio\ffmpeg\ffmpeg.exe
+     D:\Reframe Studio\ffmpeg\ffprobe.exe
+
+STEP 3: Bas! App khud pehle is folder mein ffmpeg dhoondti hai
+  (ye support maine ab code mein add kar di hai — ffmpeg_path.py).
+  Sirf Python + pip libraries (Tarika 1 ke Step 2 aur 4) phir
+  bhi chahiye.
+
+  NOTE: Total size ~500MB ho jayega — folder abhi 61MB hai
+  kyunki is PC par ffmpeg SYSTEM mein installed hai, folder
+  mein nahi. Copy karne par ye system-dependency bhi sath
+  chali jayegi.
+
+===============================================================
+ EK-CLICK INSTALLER (optional, dono PC par chalega)
+===============================================================
+Agar baar baar setup na karna ho to "install_and_run.bat" use
+karo (folder mein shamil hai): pehli baar libraries khud
+install karta hai, phir app chala deta hai.
+
+===============================================================
+ AAM MASAIL (TROUBLESHOOTING)
+===============================================================
+
+"python is not recognized"
+  -> Python install karte waqt "Add to PATH" tick nahi hua.
+  -> Dobara install karo aur checkbox tick karo.
+
+"ffmpeg is not recognized" ya app khul kar band ho jati hai
+  -> FFmpeg install nahi hua ya PATH mein nahi.
+  -> Ya Tarika 2 wala portable ffmpeg folder bana lo.
+
+"pip is not recognized"
+  -> Python ka installer dobara chalao, "Modify" karo,
+     pip ensure ho, aur PATH fix karo.
+
+Whisper (Auto Captions) pehli baar slow
+  -> Pehli baar small.en model (~460MB) internet se download
+     hota hai — ye ek dafa hota hai, phir offline chalega.
+  -> Model yahan cache hota hai:
+     C:\Users\<naam>\.cache\huggingface\
+     (chaaho to is folder ko naye PC par bhi copy kar sakte ho
+      taake download dobara na ho)
+
+Window khul kar foran band ho jati hai
+  -> CMD kholo, project folder mein cd kar ke
+        python launcher.py
+     chalao — asli error nazar aayega.
+
+===============================================================
+ QUICK CHECKLIST (print karne layak)
+===============================================================
+  [ ] Poora folder naye PC par copy
+  [ ] Python 3.10+ installed ("Add to PATH" ticked!)
+  [ ] ffmpeg -version chalta hai (ya ffmpeg/ folder bana)
+  [ ] pip install -r requirements.txt  (project folder mein)
+  [ ] run.bat double-click
+  [ ] App khul gayi? DONE!
+
+===============================================================
+ WHAT'S INSIDE (folder structure)
+===============================================================
+  launcher.py              -> app start-point (window + server)
+  run.bat                  -> double-click launcher
+  install_and_run.bat      -> pehli baar auto-install + run
+  requirements.txt         -> Python libraries ki list
+  SETUP - Naye PC Par.txt  -> ye guide
+  backend/                 -> FastAPI server + engines
+  frontend/                -> UI (HTML/CSS/JS)
+  ffmpeg/                  -> (optional) portable ffmpeg yahan

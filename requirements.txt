@@ -1,0 +1,11 @@
+# Reframe Studio — Python dependencies
+# Install on a new PC:  pip install -r requirements.txt
+# (Python 3.10+ recommended; FFmpeg must ALSO be installed — see "Read Me.txt")
+
+fastapi
+uvicorn
+pywebview
+pillow
+opencv-python
+numpy
+faster-whisper

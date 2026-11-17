@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Reframe Studio</title>
+    <link rel="stylesheet" href="style.css?v=16">
+    <link rel="stylesheet" href="style_additions.css?v=16">
+</head>
+<body>
+    <div class="topbar">
+        <div class="topbar-left">
+            <span class="brand-dot"></span>
+            <h2>Reframe Studio</h2>
+        </div>
+        <div class="topbar-right">
+            <button id="keybindsBtn" class="export-btn export-btn-secondary" title="Short keys dekho aur badlo">⌨ Shortcuts</button>
+            <button id="pjToggleBtn" class="export-btn export-btn-secondary" title="Projects save/open/rename">🗂 Projects</button>
+            <button id="saveProjectBtn" class="export-btn export-btn-secondary" title="Project Save (Ctrl+S)">💾 Save Project</button>
+            <button id="exportBtn" class="export-btn">⬆ Export</button>
+        </div>
+    </div>
+
+    <div class="app-body">
+
+        <!-- ===== LEFT COLUMN: Media Bin + Captions Panel ===== -->
+        <div class="left-column">
+            <div class="media-bin expanded" id="mediaBin">
+                <div class="media-bin-header" id="mediaBinToggle">
+                    <span class="mb-icon">📁</span>
+                    <span class="mb-title">Media Bin</span>
+                    <span class="mb-chevron">‹</span>
+                </div>
+                <div class="media-bin-content">
+                    <label class="import-btn" for="fileInput">
+                        <span class="import-plus">+</span> Import Media
+                    </label>
+                    <input type="file" id="fileInput" accept="video/*" multiple hidden />
+                    <div id="videoList" class="video-list"></div>
+                </div>
+            </div>
+
+            <!-- NAYA: Captions panel (media-bin ke neeche) — styles, colors, size,
+                 save-settings checkbox aur reset button yahan hai -->
+            <div class="captions-panel" id="captionsPanel"></div>
+
+            <!-- ===== TITLES PANEL (media-bin ke neeche — collapsible dropdown).
+                 Title = 9:16 heading-span (Auto-Captions se ALAG feature — captions
+                 poori-video overlay hai, ye sirf chhote heading-blocks) ===== -->
+            <div class="titles-panel" id="titlesPanel" style="display:none"></div>
+
+            <!-- ===== TRANSITIONS PANEL (media-bin ke neeche — transition span select/create
+                 karne par khulta hai; har transition ki chhoti ANIMATED DEMO preview) ===== -->
+            <div class="trans-panel" id="transPanel" style="display:none">
+                <div class="trans-header">
+                    <span>⇄ Transition <span id="transTargetLabel" class="cg-target-label"></span></span>
+                    <button id="transCloseBtn" class="cg-mini-btn">✕</button>
+                </div>
+                <div class="trans-type-grid" id="transTypeGrid">
+                    <button class="trans-type-btn" data-type="fadein"><span class="trans-demo demo-fadein"></span>Fade In</button>
+                    <button class="trans-type-btn" data-type="fadeout"><span class="trans-demo demo-fadeout"></span>Fade Out</button>
+                    <button class="trans-type-btn" data-type="crossfade"><span class="trans-demo demo-crossfade"></span>Crossfade</button>
+                    <button class="trans-type-btn" data-type="slideleft"><span class="trans-demo demo-slideleft"></span>Slide Left</button>
+                    <button class="trans-type-btn" data-type="slideright"><span class="trans-demo demo-slideright"></span>Slide Right</button>
+                    <button class="trans-type-btn" data-type="zoomin"><span class="trans-demo demo-zoomin"></span>Zoom In</button>
+                </div>
+                <div class="cg-row"><span class="cg-label">Duration</span><input type="range" id="transDuration" min="0.2" max="3" step="0.1" value="0.6"/><span class="cg-val" id="transDurationVal">0.6s</span></div>
+                <div class="cg-row"><span class="cg-label">Intensity</span><input type="range" id="transIntensity" min="10" max="100" step="5" value="60"/><span class="cg-val" id="transIntensityVal">60%</span></div>
+                <div class="trans-actions">
+                    <button id="transAddBtn" class="trans-add-btn" title="Playhead par naya transition span banao">＋ Transition add karo (playhead par)</button>
+                </div>
+                <div class="trans-hint">Transition segment click karo → yahan options khulenge. Clip-cut span ke andar ho to crossfade dono clips ko mila kar chalta hai.</div>
+            </div>
+
+            <!-- ===== SUBTITLES PANEL (media-bin ke neeche, collapsible) ===== -->
+            <div class="subtitles-panel" id="subtitlesPanel" style="display:none">
+                <div class="sub-header">
+                    <span class="sub-title">📄 Subtitles</span>
+                    <span class="sub-toggle" id="subCollapse">▾</span>
+                </div>
+                <div class="sub-body" id="subBody">
+                    <div class="sub-list" id="subList"></div>
+                    <div class="sub-actions">
+                        <button id="subDownloadSrt" class="sub-dl-btn">⬇ SRT</button>
+                        <button id="subDownloadTxt" class="sub-dl-btn">⬇ TXT</button>
+                    </div>
+                    <div class="sub-hint" id="subHint">Same video ki transcription cache hoti hai — dobara generate fast hoga.</div>
+                </div>
+            </div>
+
+            <!-- ===== SHORTS CANVAS PANEL (media-bin ke neeche — captions/subtitles jaisi window) ===== -->
+            <div class="shorts-panel" id="shortsPanel" style="display:none">
+                <div class="shorts-header">
+                    <span>📱 Shorts Canvas <span id="shortsStateLabel" class="cg-target-label"></span></span>
+                    <button id="shortsCollapseBtn" class="cg-mini-btn" title="Menu collapse/expand (captions jaisa dropdown)">▾</button>
+                </div>
+                <div id="shortsBody">
+                <!-- NUMERIC READOUT: size/position ke EXACT digits — EDITABLE bhi
+                     (number type karo + Enter = exact size/position apply) -->
+                <div class="sc-readout" id="scReadout">
+                    <div class="sc-ro-row"><span class="sc-ro-label">Size W × H</span>
+                        <span class="sc-ro-edit"><input type="number" id="scRoW" min="10" max="100" step="1" value="100" />% ×
+                        <input type="number" id="scRoH" min="5" max="100" step="1" value="100" />%</span></div>
+                    <div class="sc-ro-row"><span class="sc-ro-label">Position X · Y</span>
+                        <span class="sc-ro-edit"><input type="number" id="scRoX" min="0" max="100" step="1" value="50" />% ·
+                        <input type="number" id="scRoY" min="0" max="100" step="1" value="50" />%</span></div>
+                </div>
+                <div class="sc-modes">
+                    <button id="shortsModeBlur" class="sc-mode-btn">Canvas 1 · Blur BG</button>
+                    <button id="shortsModeColor" class="sc-mode-btn">Canvas 2 · Color BG</button>
+                </div>
+                <div class="cg-row" id="shortsBlurRow"><span class="cg-label">Blur level</span><input type="range" id="shortsBlur" min="0" max="30" step="1" value="14"/><span class="cg-val" id="shortsBlurVal">14</span></div>
+                <div class="cg-row" id="shortsColorRow"><span class="cg-label">BG color</span><input type="color" id="shortsColor" value="#000000"/><span class="cg-val" id="shortsColorVal">#000000</span></div>
+                <div class="cg-row"><span class="cg-label">Size</span><input type="range" id="shortsSize" min="30" max="100" step="1" value="100"/><span class="cg-val" id="shortsSizeVal">100%</span></div>
+                <div class="cg-row"><span class="cg-label">Pos X</span><input type="range" id="shortsPosX" min="0" max="100" step="1" value="50"/><span class="cg-val" id="shortsPosXVal">50%</span></div>
+                <div class="cg-row"><span class="cg-label">Pos Y</span><input type="range" id="shortsPosY" min="0" max="100" step="1" value="50"/><span class="cg-val" id="shortsPosYVal">50%</span></div>
+                <div class="shorts-actions">
+                    <button id="shortsSaveSizeBtn" class="trans-add-btn" title="Sirf SIZE save karo — agli dafa Shorts Canvas ON hote hi auto-apply">💾 Save Size</button>
+                    <button id="shortsSavePosBtn" class="trans-add-btn" title="Sirf POSITION save karo — agli dafa Shorts Canvas ON hote hi auto-apply">💾 Save Position</button>
+                </div>
+                <div class="shorts-actions">
+                    <button id="shortsResetBtn" class="pz-danger-btn" title="Size + Position saved settings dono delete kar ke defaults par wapas">↺ Reset to default</button>
+                </div>
+                <div class="trans-hint">Preview par video-box ko direct DRAG/RESIZE bhi kar sakte ho (har corner se). Save settings par agla project apne aap place ho jayega.</div>
+                </div><!-- /shortsBody -->
+            </div>
+        </div>
+
+        <!-- ===== CENTER COLUMN ===== -->
+        <div class="center-column">
+            <div class="mode-tabs" id="modeTabs"></div>
+
+            <div class="player-row">
+                <div class="video-wrapper">
+                    <video id="mainPlayer" style="display:none;"></video>
+                    <canvas id="playerCanvas"></canvas>
+                </div>
+            </div>
+
+            <div class="player-footer">
+                <div class="video-info-row" id="videoInfoRow">
+                    <div id="videoInfo" class="video-info"></div>
+                </div>
+                <div class="jump-controls">
+                    <span class="jump-label">Jump to</span>
+                    <span class="jump-field">
+                        <span class="jump-tag">Start</span>
+                        <input type="text" id="jumpStartInput" class="time-input" placeholder="00:00.000" />
+                    </span>
+                    <button id="jumpStartBtn" class="jump-go" title="Go to start time">Go</button>
+                    <span class="jump-field">
+                        <span class="jump-tag">End</span>
+                        <input type="text" id="jumpEndInput" class="time-input" placeholder="00:00.000" />
+                    </span>
+                    <button id="jumpEndBtn" class="jump-go" title="Go to end time">Go</button>
+                </div>
+            </div>
+
+            <div class="tools-row">
+                <!-- LINE 1: Play → Auto Captions (timeline controls) -->
+                <div class="tools-line">
+                    <button id="playPauseBtn" class="tool-btn tool-btn-primary"><span class="tool-icon">▶</span></button>
+                    <span class="tool-sep"></span>
+                    <button id="zoomOut" class="tool-btn"><span class="tool-icon">🔍-</span></button>
+                    <button id="zoomIn" class="tool-btn"><span class="tool-icon">🔍+</span></button>
+                    <span class="tool-sep"></span>
+                    <button id="detectSilenceBtn" class="tool-btn"><span class="tool-icon">🔇</span><span class="tool-label">Detect Silence</span></button>
+                    <button id="spotlightBtn" class="tool-btn" title="Spotlight: multi-screen zoom bubbles + vertical screens (segment ke spotlight mode mein)"><span class="tool-icon">◎</span><span class="tool-label">Spotlight</span></button>
+                    <button id="cgToggleBtn" class="tool-btn" title="Color Grading: brightness/contrast/saturation/temperature/vignette + presets"><span class="tool-icon">🎨</span><span class="tool-label">Grade</span></button>
+                    <button id="splitBtn" class="tool-btn"><span class="tool-icon">✂</span><span class="tool-label">Split</span></button>
+                    <button id="copyBtn" class="tool-btn"><span class="tool-icon">📋</span><span class="tool-label">Copy</span></button>
+                    <button id="pasteBtn" class="tool-btn"><span class="tool-icon">📥</span><span class="tool-label">Paste</span></button>
+                    <button id="duplicateBtn" class="tool-btn"><span class="tool-icon">⧉</span><span class="tool-label">Duplicate</span></button>
+                    <button id="deleteBtn" class="tool-btn"><span class="tool-icon">🗑</span><span class="tool-label">Delete</span></button>
+                    <button id="muteBtn" class="tool-btn"><span class="tool-icon">🔇</span><span class="tool-label">Mute</span></button>
+                    <button id="detachAudioBtn" class="tool-btn"><span class="tool-icon">🎧</span><span class="tool-label">Detach Audio</span></button>
+                    <span class="tool-sep"></span>
+                </div>
+
+                <!-- LINE 2: SHORTS CANVAS / Undo / Redo / GAP FILL / Speed -->
+                <div class="tools-line">
+                    <button id="generateCaptionsBtn" class="tool-btn"><span class="tool-icon">💬</span><span class="tool-label">Auto Captions</span></button>
+                    <button id="titlesToggleBtn" class="tool-btn" title="Titles: 9:16 window me heading-spans — 10 animated templates, captions transcript se ya manual text"><span class="tool-icon">🅣</span><span class="tool-label">Titles</span></button>
+                    <button id="generateSubtitlesBtn" class="tool-btn" title="Subtitles with timestamps — SRT/TXT download"><span class="tool-icon">📄</span><span class="tool-label">Subtitles</span></button>
+                    <button id="shortsToggleBtn" class="tool-btn" title="Shorts Canvas: 16:9 video ko 9:16 me place karo (blur/color background, size/position adjustable)"><span class="tool-icon">📱</span><span class="tool-label">Shorts Canvas</span></button>
+                    <button id="undoBtn" class="tool-btn"><span class="tool-icon">↶</span><span class="tool-label">Undo</span></button>
+                    <button id="redoBtn" class="tool-btn"><span class="tool-icon">↷</span><span class="tool-label">Redo</span></button>
+                    <button id="gapFillBtn" class="tool-btn" title="Video clips ke beech ke sari gaps khud close karo (left-ripple join)"><span class="tool-icon">⇥</span><span class="tool-label">Gap Fill</span></button>
+                    <div class="speed-control speed-disabled" id="speedControl" title="Drag left/right to change speed, or click to type — SARI selected clips par apply hota hai"><span class="speed-icon">⏱</span><span class="speed-value" id="speedValue">1.00x</span></div>
+                    <span id="timeDisplay" class="time-display">00:00 (f0) / 00:00 (f0)</span>
+                </div>
+            </div>
+
+            <!-- ===== TIMELINE ===== -->
+            <div class="timeline-panel">
+                <div class="timeline-body">
+
+                    <!-- fixed left label column: Video / Audio / Segments -->
+                    <div class="timeline-labels" id="timelineLabels">
+                        <div class="label-spacer">                        </div>
+
+                        <div class="label-row" data-for="trackCaptionLayer">
+                            <span class="label-dot label-dot-captions"></span>Captions
+                            <button class="layer-add-btn" data-layer-kind="captionSpan" title="Playhead par captions span banao">＋</button>
+                        </div>
+                        <div class="label-resize-spacer"></div>
+                        <div class="label-row" data-for="trackTitlesLayer">
+                            <span class="label-dot label-dot-titles">🅣</span>Titles
+                            <button class="layer-add-btn" data-layer-kind="titleSpan" title="Playhead par title span banao (3s)">＋</button>
+                        </div>
+                        <div class="label-resize-spacer"></div>
+                        <div class="label-row" data-for="trackTransitionsLayer">
+                            <span class="label-dot label-dot-transitions"></span>Transitions
+                            <button class="layer-add-btn" data-layer-kind="transition" title="Playhead par transition span banao">＋</button>
+                        </div>
+                        <div class="label-resize-spacer"></div>
+                        <div class="label-row" data-for="trackPzLayer">
+                            <span class="label-dot label-dot-pz"></span>Crop and Zoom
+                            <button class="layer-add-btn" data-layer-kind="panZoom" title="Playhead par Crop-and-Zoom span banao">＋</button>
+                        </div>
+                        <div class="label-resize-spacer"></div>
+                        <div class="label-row" data-for="trackGradeLayer">
+                            <span class="label-dot label-dot-grade"></span>Color Grade
+                            <button class="layer-add-btn" data-layer-kind="gradeSpan" title="Playhead par grade span banao">＋</button>
+                        </div>
+                        <div class="label-resize-spacer"></div>
+                        <div class="label-row" data-for="trackVideo">
+                            <span class="label-dot label-dot-video"></span>Video
+                        </div>
+                        <div class="label-resize-spacer"></div>
+                        <div class="label-row" data-for="trackAudioCombined">
+                            <span class="label-dot label-dot-audio"></span>Audio
+                        </div>
+                        <div class="label-resize-spacer"></div>
+                        <div class="label-row" data-for="segmentsLayer">
+                            <span class="label-dot label-dot-segment"></span>Segments
+                        </div>
+                    </div>
+
+                    <!-- scrollable area: ruler + tracks, horizontal + vertical scroll -->
+                    <div class="timeline-scroll" id="timelineScroll">
+                        <div class="timeline-track" id="timelineTrack">
+
+                            <div class="ruler-frames" id="rulerFrames"></div>
+                            <div class="ruler-seconds" id="rulerSeconds"></div>
+                            <div class="tracks-area" id="tracksArea">
+                                <div class="scrub-area" id="scrubArea">
+                                    <!-- ===== NAYE LAYER ROWS (upar se neeche: Captions / Transitions / CropZoom / Grade) ===== -->
+                                    <div class="track-row track-layer track-captions" id="trackCaptionLayer">
+                                        <div class="layer-spans" id="captionSpansLayer"></div>
+                                    </div>
+                                    <div class="track-resize-handle" data-target="trackCaptionLayer"></div>
+
+                                    <div class="track-row track-layer track-titles" id="trackTitlesLayer">
+                                        <div class="layer-spans" id="titlesSpansLayer"></div>
+                                    </div>
+                                    <div class="track-resize-handle" data-target="trackTitlesLayer"></div>
+
+                                    <div class="track-row track-layer track-transitions" id="trackTransitionsLayer">
+                                        <div class="layer-spans" id="transitionSpansLayer"></div>
+                                    </div>
+                                    <div class="track-resize-handle" data-target="trackTransitionsLayer"></div>
+
+                                    <div class="track-row track-layer track-pz" id="trackPzLayer">
+                                        <div class="layer-spans" id="pzSpansLayer"></div>
+                                    </div>
+                                    <div class="track-resize-handle" data-target="trackPzLayer"></div>
+
+                                    <div class="track-row track-layer track-grade" id="trackGradeLayer">
+                                        <div class="layer-spans" id="gradeSpansLayer"></div>
+                                    </div>
+                                    <div class="track-resize-handle" data-target="trackGradeLayer"></div>
+
+                                    <div class="track-row track-video" id="trackVideo">
+                                        <div class="filmstrip" id="filmstrip"></div>
+                                        <div class="track-videoblocks" id="videoBlocksLayer"></div>
+                                    </div>
+
+                                    <div class="track-resize-handle" data-target="trackVideo"></div>
+
+                                    <div class="track-row track-audio" id="trackAudioCombined">
+                                        <img class="waveform-img" id="waveformImg" />
+                                        <div class="track-audiolane" id="audioLayer"></div>
+                                    </div>
+
+                                    <div class="track-resize-handle" data-target="trackAudioCombined"></div>
+
+                                    <div class="track-row track-segments" id="segmentsLayer"></div>
+
+                                    <!-- A/D segment-marker flags yahan render hote hain -->
+                                    <div class="marker-overlay" id="markerOverlay"></div>
+                                </div>
+
+                                <div class="playhead" id="playhead"><div class="playhead-flag"></div></div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- CUSTOM horizontal scrollbar (native WebView2 overlay-bars par
+                     depend nahi kar sakte — ye apna bar HAMESHA visible rehta hai) -->
+                <div class="h-scroll-bar" id="hScrollBar">
+                    <div class="h-scroll-thumb" id="hScrollThumb"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== PREVIEW PANEL ===== -->
+        <div class="preview-panel">
+            <h3>9:16 Preview</h3>
+            <canvas id="previewCanvas" width="270" height="480"></canvas>
+
+            <!-- ===== COLOR GRADE PANEL (Phase 1) ===== -->
+            <div class="cg-panel" id="cgPanel" style="display:none">
+                <div class="cg-header">
+                    <span>🎨 Color Grade <span id="cgTargetLabel" class="cg-target-label"></span></span>
+                    <button id="cgCloseBtn" class="cg-mini-btn">✕</button>
+                </div>
+                <div class="cg-presets">
+                    <button class="cg-preset-btn active" data-preset="none">Original</button>
+                    <button class="cg-preset-btn" data-preset="cinematic">Cinematic</button>
+                    <button class="cg-preset-btn" data-preset="vivid">Vivid</button>
+                    <button class="cg-preset-btn" data-preset="warm">Warm</button>
+                    <button class="cg-preset-btn" data-preset="cold">Cold</button>
+                    <button class="cg-preset-btn" data-preset="bw">B&W</button>
+                    <button class="cg-preset-btn" data-preset="vintage">Vintage</button>
+                    <button class="cg-preset-btn" data-preset="fade">Faded</button>
+                    <button class="cg-preset-btn" data-preset="punchy">Punchy</button>
+                    <button class="cg-preset-btn" data-preset="night">Night</button>
+                </div>
+                <div class="cg-row"><span class="cg-label">Brightness</span><input type="range" id="cg_brightness" min="-100" max="100" step="1" value="0"/><span class="cg-val" id="cg_brightnessVal">0%</span></div>
+                <div class="cg-row"><span class="cg-label">Contrast</span><input type="range" id="cg_contrast" min="-100" max="100" step="1" value="0"/><span class="cg-val" id="cg_contrastVal">0%</span></div>
+                <div class="cg-row"><span class="cg-label">Saturation</span><input type="range" id="cg_saturation" min="-100" max="100" step="1" value="0"/><span class="cg-val" id="cg_saturationVal">0%</span></div>
+                <div class="cg-row"><span class="cg-label">Temperature</span><input type="range" id="cg_temperature" min="-100" max="100" step="1" value="0"/><span class="cg-val" id="cg_temperatureVal">0%</span></div>
+                <div class="cg-row"><span class="cg-label">Sharpen</span><input type="range" id="cg_sharpen" min="0" max="100" step="1" value="0"/><span class="cg-val" id="cg_sharpenVal">0%</span></div>
+                <div class="cg-row"><span class="cg-label">Vignette</span><input type="range" id="cg_vignette" min="0" max="100" step="1" value="0"/><span class="cg-val" id="cg_vignetteVal">0%</span></div>
+                <div class="cg-footer">
+                    <button id="cgBeforeAfterBtn" class="cg-ba-btn" title="Dabaye rakho = original, chhodo = graded">👁 Before / After (hold)</button>
+                    <button id="cgResetBtn" class="cg-reset-btn">↺ Reset</button>
+                </div>
+            </div>
+
+            <!-- ===== CROP AND ZOOM (PAN & ZOOM) PANEL ===== -->
+            <div class="pz-panel" id="pzPanel" style="display:none">
+                <div class="pz-header">
+                    <span>🔍 Crop and Zoom</span>
+                    <button id="pzCloseBtn" class="cg-mini-btn">✕</button>
+                </div>
+                <div class="pz-modes" id="pzModeRow">
+                    <button class="pz-mode-btn active" data-pzmode="static">Static</button>
+                    <button class="pz-mode-btn" data-pzmode="in">Zoom In</button>
+                    <button class="pz-mode-btn" data-pzmode="out">Zoom Out</button>
+                </div>
+                <div class="cg-row"><span class="cg-label">Zoom</span><input type="range" id="pzZoom" min="1" max="4" step="0.05" value="1"/><span class="cg-val" id="pzZoomVal">1.00x</span></div>
+                <div class="pz-hint">BOX = wo area jo screen par bharega (box drag/resize karo). Zoom slider se usi box ke andar manual zoom-in/out set karo (1x = sirf crop, 2x = 2 guna andar). Zoom In/Out mode mein layer ki lambai = zoom ki speed.</div>
+                <div class="pz-actions">
+                    <button id="pzDeleteBtn" class="pz-danger-btn" title="Selected PanZoom layer delete karo">🗑 Delete Layer</button>
+                </div>
+            </div>
+
+            <!-- ===== SPOTLIGHT CONTROLS (multi-screen) ===== -->
+            <div class="spotlight-ctrls" id="spotlightCtrls" style="display:none">
+                <div class="sp-screen-list" id="spScreenList"></div>
+                <div class="sp-row sp-actions">
+                    <button id="spAddSpot" class="sp-btn" title="Nayi shape-screen add karo">+ Screen</button>
+                    <button id="spAddVertical" class="sp-btn" title="Full-height vertical (9:16) crop screen add karo">+ Vertical</button>
+                    <button id="spDupScreen" class="sp-btn" title="Selected screen ki copy banao">⧉ Dup</button>
+                    <button id="spDelScreen" class="sp-btn sp-danger" title="Selected screen delete karo">✕ Del</button>
+                </div>
+                <div class="sp-row">
+                    <span class="sp-label">Zoom</span>
+                    <input type="range" id="spZoom" min="1" max="4" step="0.05" value="1.6" />
+                    <span class="sp-val" id="spZoomVal">1.60x</span>
+                </div>
+                <div class="sp-row">
+                    <span class="sp-label">Size</span>
+                    <input type="range" id="spSize" min="0.05" max="0.45" step="0.01" value="0.17" />
+                    <span class="sp-val" id="spSizeVal">17%</span>
+                </div>
+                <div class="sp-row sp-styles" id="spStyleRow">
+                    <button class="sp-style-btn active" data-style="circle" title="Circle">●</button>
+                    <button class="sp-style-btn" data-style="square" title="Square box">■</button>
+                    <button class="sp-style-btn" data-style="star" title="Star">★</button>
+                    <button class="sp-style-btn" data-style="heart" title="Heart">♥</button>
+                    <button class="sp-style-btn" data-style="hexagon" title="Hexagon">⬡</button>
+                    <button class="sp-style-btn" data-style="diamond" title="Diamond">◆</button>
+                    <button class="sp-style-btn" data-style="ring" title="Ring (sirf guide — export mein burn nahi hota)">◌</button>
+                </div>
+                <div class="sp-row" id="spBorderRow">
+                    <span class="sp-label">Border</span>
+                    <input type="range" id="spBorderW" min="0" max="24" step="1" value="8" />
+                    <input type="color" id="spBorderColor" value="#ffffff" style="width:28px;height:22px;padding:0;border:none;background:none" />
+                    <span class="sp-val" id="spBorderWVal">8px</span>
+                </div>
+                <div class="sp-row">
+                    <label class="sp-label" style="display:flex;align-items:center;gap:6px;cursor:pointer">
+                        <input type="checkbox" id="spShadow" checked /> Shadow</label>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ===== KEYBINDINGS PANEL ===== -->
+    <div class="keybind-panel" id="keybindPanel">
+        <div class="keybind-header">
+            <span>⌨ Shortcuts</span>
+            <div class="keybind-header-actions">
+                <button id="kbResetBtn" class="kb-mini-btn" title="Sab keys default par wapis">Reset</button>
+                <button id="kbCloseBtn" class="kb-mini-btn">✕</button>
+            </div>
+        </div>
+        <div class="keybind-hint">Naya key assign karne ke liye button par click karo aur key dabao (Esc = cancel)</div>
+        <div class="keybind-list" id="kbActionList"></div>
+    </div>
+
+    <!-- ===== PROJECTS PANEL (Save/Load/Rename) ===== -->
+    <div class="projects-panel" id="projectsPanel">
+        <div class="projects-header">
+            <span>🗂 Projects</span>
+            <button id="pjCloseBtn" class="pj-mini-btn">✕</button>
+        </div>
+        <div class="projects-actions">
+            <input type="text" id="pjNameInput" class="pj-name-input" placeholder="Project ka naam…" />
+            <button id="pjSaveBtn" class="pj-action-btn pj-save">Save</button>
+        </div>
+        <div class="projects-hint" id="pjHint"></div>
+        <div class="projects-list" id="pjList"></div>
+    </div>
+
+    <!-- ===== EXPORT MODAL ===== -->
+    <div class="modal-overlay" id="exportModalOverlay" style="display:none;">
+        <div class="modal-box">
+            <h3>Export Video</h3>
+
+            <div class="modal-field">
+                <label>Quality</label>
+                <div class="modal-radio-row" id="exportQualityRow">
+                    <label><input type="radio" name="exportQuality" value="test" /> Test (fast, low quality)</label>
+                    <label><input type="radio" name="exportQuality" value="720p" checked /> 720p</label>
+                    <label><input type="radio" name="exportQuality" value="1080p" /> 1080p</label>
+                </div>
+            </div>
+
+            <div class="modal-field">
+                <label>Codec</label>
+                <div class="modal-radio-row" id="exportCodecRow">
+                    <label><input type="radio" name="exportCodec" value="h264" checked /> H.264 (fast, compatible)</label>
+                    <label><input type="radio" name="exportCodec" value="h265" /> H.265 (smaller file, slower)</label>
+                </div>
+            </div>
+
+            <div class="modal-progress" id="exportProgressWrap" style="display:none;">
+                <div class="modal-progress-bar"><div class="modal-progress-fill" id="exportProgressFill"></div></div>
+                <div class="modal-progress-label" id="exportProgressLabel">Rendering… 0%</div>
+            </div>
+
+            <div class="modal-result" id="exportResultWrap" style="display:none;">
+                <a id="exportDownloadLink" href="#" download class="export-download-btn">⬇ Download Video</a>
+            </div>
+
+            <div class="modal-actions">
+                <button id="exportCancelBtn" class="tool-btn">Cancel</button>
+                <button id="exportStartBtn" class="tool-btn tool-btn-primary">Start Export</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="timeline.js?v=16"></script>
+    <script src="crop_editor.js?v=16"></script>
+    <script src="spotlight.js?v=16"></script>
+    <script src="color_grade.js?v=16"></script>
+    <script src="captions.js?v=24"></script>
+    <script src="titles.js?v=18"></script>
+    <script src="shorts_canvas.js?v=16"></script>
+    <script src="layers.js?v=18"></script>
+    <script src="editor_tools.js?v=16"></script>
+    <script src="speed_control.js?v=16"></script>
+    <script src="export_ui.js?v=16"></script>
+    <script src="app.js?v=16"></script>
+    <script src="projects.js?v=16"></script>
+    <script src="keybindings.js?v=16"></script>
+</body>
+</html>

@@ -1,0 +1,181 @@
+REFRAME STUDIO — TEST CHECKLIST (sab features)
+=============================================
+App chalao (run.bat — pehle purani window band karo) aur ye list ek-ek karke
+tick karo. Har test ke sath EXPECTED result likha hai. Koi test fail ho to
+uska number + screenshot bhej dena.
+
+A. MEDIA + BASIC EDITING
+------------------------
+[ ] 1. Video upload -> media bin mein dikhe, player + 9:16 preview chal jaye
+[ ] 2. Play/Pause (Num5 / Space) -> video + playhead dono chalein
+[ ] 3. Numpad transport: Num1(-5s) / Num3(+5s) / Num4(-1s) / Num6(+1s) /
+       Num7(-10s) / Num9(+10s) — playhead jump kare
+[ ] 4. Frame steps: Num2 (+1f) / Ctrl+Num2 (+5f) / Shift+Num2 (+10f) /
+       Num0 (-1f) / Ctrl+Num0 (-5f) / Shift+Num0 (-10f)
+[ ] 5. Num8 = STOP (pause + playhead 0 par)
+[ ] 6. A phir D = segment markers -> segment ban jaye
+[ ] 7. F ya K = split | Ctrl+C/V = copy/paste | Ctrl+Z = undo | Ctrl+X = REDO
+[ ] 8. Detect Silence -> delete -> clips khud join (koi glitch na ho)
+[ ] 9. Speed change (multi-select) -> Gap Fill -> playback sahi (no blank)
+[ ] 10. Custom horizontal scrollbar niche dikhe, drag se scroll ho
+       (wheel = scroll, Ctrl+wheel = zoom)
+
+B. SPOTLIGHT MULTI-SCREEN (⭐ signature feature — NAYA MODEL)
+------------------------------------------------------------
+MODEL: SAARI cropping 16:9 window (player) par hoti hai; 9:16 sirf OUTPUT hai.
+[ ] 11. "◎ Spotlight" button -> active segment spotlight + default screen +
+        panel 9:16 preview ke neeche khule (Screen 1 list + buttons)
+[ ] 12. "Add Stack" button timeline mein NAHI hona chahiye (removed)
+[ ] 13. + Screen -> nayi shape screen (●) aaye; + Vertical -> full-height
+        strip aaye; list mein har screen ki row + ✕ delete ho
+[ ] 14. 16:9 PLAYER par har screen ka blue SRC guide dikhe:
+        vertical = white/blue BOX, shape = blue SHAPE outline
+[ ] 15. VERTICAL: 16:9 par blue source-box DRAG karo -> 9:16 strip ka content
+        usi area se aaye (box left rakho -> left ka content dikhe)
+[ ] 16. VERTICAL: source-box ke 6 handles (2 top + 2 center + 2 bottom) se
+        resize -> chhota/bada area select ho (opposite edge FIXED rahe)
+[ ] 17. VERTICAL: 9:16 strip par 6 orange handles se width resize (left/right
+        move + width dono adjust ho)
+[ ] 18. VERTICAL: BORDER-LESS — strip par koi white border na dikhe (preview
+        aur export dono mein)
+[ ] 19. SHAPE: 16:9 par shape outline drag kar ke place karo -> shape ke andar
+        jo area select hua WAHI shape mein 9:16 par dikhe (content match)
+[ ] 20. SHAPE: 16:9 par 6-point resize -> bada area = zyada content
+[ ] 21. SHAPE: 9:16 par drag (move) + Zoom slider (1.6x waghera) + Size slider
+        — dono kaam karein
+[ ] 22. Shapes: ● ■ ★ ♥ ⬡ ◆ sab try karo — 16:9 guide + 9:16 dono badlen
+[ ] 23. Ring (◌) -> sirf guide, export mein burn NAHI hota
+[ ] 24. SHAPE: Border slider + color -> sirf shapes par border dikhe
+        (vertical par border controls chhupe hon)
+[ ] 25. SHAPE: Shadow checkbox -> bubble ke neeche shadow (preview + export)
+[ ] 26. ⧉ Dup -> selected screen ki copy aaye (vertical dup SAME source-area
+        share kare — V1+V1Dup side-by-side)
+[ ] 27. ✕ Del / row-✕ -> screen delete ho (list update ho)
+[ ] 28. Panel SCROLL: options poore nazar aayen (max-height + scrollbar)
+[ ] 29. Playback ke dauran screens update hoti rahen (video ke sath)
+[ ] 30. EXPORT (test quality) -> final video mein: vertical strips (border-
+        less, full-height, source-area content) + shape screens (16:9 se
+        select kiya area shape ke andar) + captions sharp + volume same
+[ ] 31. Undo (Ctrl+Z) screen move/resize/shape change revert kare
+[ ] 32. Split (F) spotlight segment par -> do segments, dono ke apne screens
+[ ] 33. Project Save/Load -> screens (positions, shapes, src-areas) wapis aayen
+[ ] 34. PURANA project (bubble wala) kholo -> auto 1 screen mein convert ho
+
+D. CAPTIONS (ab 26 styles)
+--------------------------
+[ ] 28. Captions panel kholo (media-bin ke neeche) -> Style dropdown mein 26
+        styles: Hormozi, MrBeast, TikTok Pop, Neon Glow, Podcast Bold, Bold
+        Highlight, Big Pop, Karaoke Fill, Minimal Clean, Classic Subtitle,
+        Viral Yellow, Green Screen, Retro Wave, Comic Pop, Gym Beast, News
+        Ticker, Karaoke Wave, Soft Pastel, Gaming RGB, Luxury Gold, Ocean Blue,
+        Fire Red, Bubble Gum, Mono Gray, Banana Split, Whisper Small
+[ ] 29. Har naya style try karo (Viral Yellow = pop effect, Green Screen =
+        box highlight, Soft Pastel = underline, etc.)
+[ ] 30. Color checkboxes (Text/Active/Highlight) + Reset + Save settings kaam
+        karein
+[ ] 31. EXPORT -> jo style preview mein dikha wahi final mein (colors exact)
+[ ] 32. Caption 9:16 preview par drag/resize ho
+
+E. COLOR GRADING (🎨 Grade button)
+----------------------------------
+[ ] 33. Topbar mein 🎨 Grade button -> panel khule (10 presets + 6 sliders)
+[ ] 34. Presets: Cinematic / Vivid / Warm / Cold / B&W / Vintage / Faded /
+        Punchy / Night — har ek ka preview turant badle (active preset
+        highlight ho)
+[ ] 35. Sliders: Brightness/Contrast/Saturation/Temperature/Sharpen/Vignette —
+        live preview update ho
+[ ] 36. 👁 Before/After (HOLD) -> dabaye rakho = original, chhodo = graded
+[ ] 37. B&W preset mein saturation -100 -> preview poori black & white
+[ ] 38. Sharpen slider preview mein apply nahi hota (sirf export burn) — panel
+        mein hai, export test se verify hota hai
+[ ] 39. EXPORT -> grade final video mein burn ho (B&W test sab saaf dikhata hai)
+[ ] 40. ↺ Reset -> sab sliders 0, Original preset active
+[ ] 41. 🎨 Grade dobara dabao -> panel band
+[ ] 42. Grade ki setting project save/load ke sath bhi rahe (Projects panel se
+        save kar ke dobara kholo)
+
+F. PROJECTS
+-----------
+[ ] 43. 🗂 Projects -> naam likh kar Save -> projects/ folder mein bane
+[ ] 44. App band kar ke dobara kholo -> Open -> timeline + spotlight screens +
+        grade + captions SAB wapis aayen
+[ ] 45. Rename/Delete kaam karein
+
+G. REGRESSION (purane features na tooten)
+-----------------------------------------
+[ ] 46. Export volume start/end par SAME (normalize=0 fix intact)
+[ ] 47. Timeline content-end par playback ruke (+15s drag-room rahe)
+[ ] 48. Media bin collapse -> captions panel bhi chhupe
+[ ] 49. Keybindings panel (⌨) -> custom assign + Reset
+[ ] 50. 2 ghante ka session — koi blank canvas / repeat-loop glitch na aaye
+
+PASS CRITERIA: 50/50. Fail hone par: test number + kya hua + screenshot.
+
+=============================================================
+H. Aaj ke NAYE changes ki QUICK SMOKE-LIST (sirf ye 8, sab se zaroori)
+=============================================================
+[ ] H1. App kholo -> video upload -> crop segment -> Spotlight button ->
+        panel 9:16 ke neeche khule, "S2 missing" KAHIN na dikhe
+[ ] H2. + Vertical -> 16:9 player par blue SRC box dikhe, drag ho, 6 handles
+        se resize ho; strip ka content usi area se aaye
+[ ] H3. 9:16 strip par 6 orange handles se resize ho; koi white border na ho
+[ ] H4. + Screen -> shape 16:9 par blue outline se place/resize ho; andar ka
+        area 9:16 shape ke andar dikhe
+[ ] H5. Zoom/Size/Border/Shadow sliders shapes par kaam karein
+[ ] H6. Export test -> strips border-less + shapes 16:9-crop ke sath burn hon
+[ ] H7. Caption style dropdown 26 styles + har style ka apna animation
+[ ] H8. Project save/load -> sab wapis
+H. 7-LAYER TIMELINE (NAYE LAYERS — 01 Oct)
+------------------------------------------
+[ ] 1. Timeline par 7 labels upar se neeche: Captions, Transitions, Crop and
+       Zoom, Color Grade, Video, Audio, Segments — sab dikh rahe hon
+[ ] 2. Auto Captions dabao -> Captions layer (0 se end tak) ban jaye
+[ ] 3. Captions layer select kar ke playhead beech me rakho, Split (F/K) dabao
+       -> 2 pieces ban jayen
+[ ] 4. Piece-2 par Captions panel se style badlo (e.g. MrBeast) -> SIRF piece-2
+       ka caption badle, piece-1 waisa hi rahe (9:16 preview me check)
+[ ] 5. Piece-2 par size slider -> sirf wahan caption bara/chhota ho
+[ ] 6. Transitions row me khali jagah par DRAG -> transition span bane
+[ ] 7. Transition span select karo -> right panel me Type/Duration/Intensity
+       aaye; type badlo (Slide Left) -> renderAll me label badle
+[ ] 8. Do clips ke cut par transition span rakho -> export me cut ke waqt
+       transition dikhe (test export se)
+[ ] 9. Crop and Zoom row me span banao -> 9:16 preview me dashed BOX aaye
+[ ] 10. Box ko drag karo (position) + corner se resize -> span ke andar zoom
+        wahi box follow kare
+[ ] 11. Mode = Zoom In karo aur play button dabao -> span ke doran smooth
+        zoom-in ho, span khatam hote hi normal
+[ ] 12. Color Grade row me span banao -> Grade panel (🎨) kholo, brightness
+        slider ghumao -> sirf us span par grade lage
+[ ] 13. Grade span split karo -> piece-2 ka grade alag set ho -> dono pieces
+        apne-apne rang dikhayen
+[ ] 14. Purana project (global grade wala) load karo -> full-span Color Grade
+        layer ban jaye, video ka grade waisa hi dikhe
+[ ] 15. "Subtitles" button dabao -> media-bin ke neeche panel khule, timestamps
+        ke sath lines dikhen
+[ ] 16. "⬇ SRT" -> file download ho (Notepad me timestamps sahi hon)
+[ ] 17. "⬇ TXT" -> file download ho ([MM:SS - MM:SS] format)
+[ ] 18. Dobara "Subtitles" dabao -> FORAN load ho (cache) — "CACHE se load"
+        hint dikhe
+[ ] 19. Kisi bhi naye layer ki span ko drag/resize/undo(Ctrl+Z)/delete karo —
+        sab normal layers ki tarah chalein
+[ ] 20. Export (test quality) -> final video me captions/transition/zoom/grade
+        sab layers waise hi dikhen jaise preview me
+
+=============================================================
+I. 02-OCT BUG REPORT — 9 FIXES KI ACCEPTANCE LIST
+=============================================================
+(03-Oct: BUFF NE LIVE-TEST KIYE — sab pass; user bhi apni app par ek dafa
+confirm kar le)
+[x] I1. (Bug 1) "+" buttons — click/drag-create band, button se span banta hai
+        (live: buttons->spans created, empty-click par create NAHI)
+[x] I2. (Bug 2) Alignment theek (live measured: sab 7 rows diff 0.0px)
+[x] I3. (Bug 3) Playhead + shortkeys (live: Num6/Num4 seek OK, click-seek OK)
+[x] I4. (Bug 4) Pan&Zoom zoom pixel-proof + zoom-in region shrink (0.596->0.301)
+[x] I5. (Bug 5) Transition resize (2->4s) + move (1->2s) + fadein pixel-proof
+[x] I6. (Bug 6) Grade span resize (live: left-handle ne start 0->0.5 kiya)
+[x] I7. (Bug 7) Playback-loop death-proof + snapshot cache (scratch-reuse
+        verified) — lamba use kar ke confirm karna abhi user par hai
+[x] I8. (Bug 8) A/D crop-segment wapis (live: 0.5-2.5 segment bana)
+[x] I9. (Bug 9) Captions layer/split/panel/render bina crash + focus-fix
+        (user apni asli video par auto-captions ek dafa chala le)

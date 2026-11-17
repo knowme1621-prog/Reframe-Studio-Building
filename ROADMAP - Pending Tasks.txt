@@ -1,0 +1,358 @@
+REFRAME STUDIO — AGLE KAAM (pending tasks)
+==========================================
+
+0. KEYBINDINGS FIX + MULTI-KEY  ✅ DONE (23 Sep)
+--------------------------------
+- BUG FIX: F/K split kaam nahi kar raha tha — keybindings galat function naam
+  (splitAtPlayhead) call kar rahe the; asli naam splitSelectedAtPlayhead hai.
+  Ab window[name] lookup + console.warn agar function missing ho.
+- MULTI-KEY: ek action par ab 4 tak keys assign ("+ key" button se ADD hoti hai,
+  purani nahi mit-ti). Chip par RIGHT-CLICK = us key ko hatao.
+- Panel: keys ab chips ki tarah dikhti hain (multi visible), old single-format
+  localStorage auto-migrate hota hai, Reset-to-defaults intact.
+- Live-tested: F/K/G sab split karte hain, Ctrl+P add/remove, persistence, reset ✅
+
+1. KEY BINDINGS / SHORTCUTS  ✅ DONE (21 Sep)
+---------------------------
+- Numpad transport + Ctrl/Shift variants, Num5/Space = Play/Pause, Num8 = Stop,
+  2/0 = frame steps, Ctrl+S = Project Save, A/D = Segment markers, F/K = Split,
+  Ctrl+C/V copy/paste, Ctrl+Z undo, Ctrl+X = RE-DO
+- Custom assign + reset (Shortcuts panel), localStorage persistence
+- Note: NumLock ON rakhna (warna numpad keys End/Home ban jati hain)
+
+2. PROJECTS SAVE/LOAD SYSTEM  ✅ DONE (21 Sep)
+----------------------------
+- projects/ folder, har project = folder (project.json + media/ safe copies)
+- Save/Open/Rename/Delete + Ctrl+S; media restore uploads mein wapas
+- Live-tested: save -> uploads delete -> restore -> wapis aa gaya ✅
+
+3. ⭐ SIGNATURE FEATURE: 2-STACK SPOTLIGHT SYSTEM  ✅ PHASE A+B DONE (21 Sep)
+------------------------------------------------
+User ka idea (kisi tool mein nahi — Adobe mein complex track-matte ke sath hai):
+- Timeline ke neeche DOOSRA stack: Video / Audio / Segment (S2 labels, purple tint)
+- "⧉ Add Stack" button se stack-2 rows on/off (dropdown-style collapse/expand)
+- Same video dono stacks par (duplicate EK hi file refer karta hai — disk save,
+  stack-2 apna hidden <video> element, sirf 1x rate par preview)
+- "◎ Spotlight" button (Add Stack ke baad dikhta hai): 1-click setup —
+  S2 mein base video duplicate + active segment = spotlight mode + bubble ready
+- SPOTLIGHT BUBBLE: 9:16 preview par INTERACTIVE bubble — drag/resize knob se,
+  ya sliders (Zoom 1-4x, Size 5-45%) + 7 SHAPES: Circle / Square / Star /
+  Heart / Hexagon / Diamond / Ring — export mein sab burn hote hain (ring sirf
+  guide). Pixel-proven: STAR export — center/tips bubble, notch bilkul nahi ✅
+  (shape engine JS + Python mirror exact match)
+- Zoom S1 spotlight segment ke base crop-box par center-square sample (no stretch)
+- Har segment ke sath bubble params save: bubbleState/bubbleZoom/bubbleStyle
+  (project save + undo/redo sab cover)
+- Player canvas par dashed GHOST guide (non-interactive)
+- Caption-drag vs bubble-drag conflict: bubble priority
+- EXPORT: bubble BURN-IN (circle/square; ring sirf preview guide) — pixel-proven:
+  bubble interior vs expected zoom-crop diff 4.48 (sirf encoder noise) ✅
+- Stack-2 audio: preview mein muted, export mein mix (agar unmuted clips/lanes)
+- Undo/redo, copy/paste (stack carry), split, delete, gap-fill, speed — sab
+  stack-aware
+
+BACHI HUI CHEEZEIN (Phase C / polish):
+- [ ] Media-bin se stack-2 video row par DRAG-DROP (alag file support) —
+      abhi sirf duplicate/paste se aati hai (user ne dono maange the)
+- [ ] S2 clips par bhi speed control (preview mein do rates sync — filhal
+      export-side speed hai, preview 1x)
+- [ ] N stacks (3+) — arrays abhi 2 tak hard-coded (stackArrays(n))
+- [ ] Stack-2 bubbles ki multiple-per-frame listing (abhi 1 spotlight seg active)
+
+4. COLOR GRADING (Filmora-style)  ⏳ ISKE BAAD
+--------------------------------
+- Phase 1: basic sliders (brightness/contrast/saturation/temp/vignette/sharpen)
+  + live preview (canvas filter) + presets + export burn-in (ffmpeg eq etc.)
+- Phase 2: 3 color wheels (shadows/midtones/highlights)
+- Phase 3: curves + HSL (8 channels)
+- Phase 4: custom LUT (.cube) import
+- Filmora feature-list research ho chuki hai
+
+5. CAPTIONS: 26 UNIQUE STYLES + ANIMATION ENGINE  ✅ DONE (22 Sep)
+------------------------------------------------
+- Har style ka APNA animation + APNA color-highlighting (26 alag primitives):
+  pop/stamp/rotPop/popBounce/boxBounce/shake/slide/squash/underlineFloat/flash,
+  glowPulse/glowSwap (+glow2)/rgbCycle (+activePalette 5 colors), fill/fillSweep,
+  box/doubleBox/boxTilt/boxBounce/boxRounded/outlineBox/lineBox/tickerBar,
+  underline/strike/none — JS + Python mirror 26/26 exact ✅
+- Py engine rewrite: PIL layers (rotate/scale/squash), GaussianBlur glow,
+  clip-based karaoke sweep, tilted/rounded boxes — pixel-tested
+- Proof: 26/26 visually unique (no dupes), 9/9 time-driven anims verified,
+  preview grid saved: caption_styles_preview.png
+- Bonus fixes: glow paste-offset bug (invisible tha), transform center bug
+  (y vs tx), retroWave glow2 + gamingRgb activePalette mirrors
+
+6. BAAD MEIN (ideas bank)
+-----------------------
+- Transitions (fade/dip pehle, crossfade/slide/wipe baad mein — overlap zone)
+- Effects/filters (blur, sharpen, vignette, glitch...)
+- Caption styles unlimited (registry system ready hai — naya style = 1 function)
+- Mobile app (Expo/React Native, phone-par-testing via Expo Go — baat ho chuki)
+
+
+STATUS: SPOTLIGHT MULTI-SCREEN + ADD-STACK REMOVAL COMPLETE (22 Sep).
+Agla: browser live-test + TEST-CHECKLIST update + Color Grading Phase 2.
+
+
+==============================================================
+[PAUSE-POINT 22-Sep #2] SPOTLIGHT MULTI-SCREEN — ✅ 100% COMPLETE
+==============================================================
+SUB KUCH HO CHUKA + PROVEN (pixel-level smoke tests):
+- T1 legacy-bubble migration: center diff=168.7, corner diff=0.0 ✅
+- T2 star screen: tips 168.7, notch 0.0 (shape WAQAI star hai) ✅
+- T3 V1+V1-dup FULL-HEIGHT strips: left 4.0 / right 2.1 (content match),
+  top-rows 145.8 (poori height cover) ✅
+- T4 FULL EXPORT: 350KB video, output left-strip vs expected diff=7.1 ✅
+- Add-Stack UI + dead timeline refs REMOVED (5 refs clean) ✅
+- Shadow bool/dict crash-fix, S2-dims base-box fix, migration write-back ✅
+- Saari JS + Python syntax PASS ✅, artifacts CLEAN ✅
+
+AGLA KAAM (jab user bole):
+1. BROWSER LIVE-TEST: app restart -> crop segment -> Spotlight -> screens
+   add/drag/resize -> vertical strips -> export (manual, user karega)
+2. TEST-CHECKLIST.txt Section B: N-screens + vertical-strip tests likho
+3. Color Grading Phase 2 (color wheels) ya jo user chahe
+
+==============================================================
+[HOTFIX 23-Sep] SPOTLIGHT DEAD + PANEL CUT — ✅ FIXED & LIVE-TESTED
+==============================================================
+ROOT-CAUSE (2 JS bugs jo poora spotlight dead kar rahe the):
+1. drawSpotlightOverlay/spotlightHandleMouseDown: seg = ensureScreens(find-  SpotlightSeg()) — ensureScreens ARRAY return karta hai, segment NAHI.
+   seg.screens undefined -> har-frame 'reading map' crash -> draw/drag/panel
+   sab dead. FIX: seg pehle findSpotlightSeg(), phir ensureScreens(seg).
+2. getSelectedScreen(ensureScreens(seg)) — double-ensure se THROWAWAY screen
+   banti thi; shape/zoom sliders asli screen par kabhi apply nahi hote the.
+   FIX: getSelectedScreen(seg) + Array-guard andar.
+
+PANEL CUT FIX: .spotlight-ctrls par max-height:46vh + overflow-y:auto +
+styled scrollbar — ab saare options scroll karke nazar aate hain.
+
+LIVE-TESTED (preview browser, real upload -> Spotlight):
+- Panel visible, S2 source element live (readyState 4) ✅
+- Preview pixel-proof: border white (255,255,255), inside S2 zoom (blue),
+  outside base frame ✅
+- Star shape apply (pixel: red border at star tip) + zoom 2.5x + border-color
+  + size slider — sab segment par save ✅
+- +Vertical x2 (x=0.25/0.75, w=0.5) -> full-height strips, top-pixels content ✅
+- Add Screen/Dup/Del buttons ✅, screens-list 3 rows ✅, console CLEAN ✅
+- Backend persist round-trip (vertical + star screens) ✅
+NOTE: preview-tab hidden hone par browser rAF throttle karta hai (0 ticks) —
+user ki asli app-window mein loop chalta hai; test-artifact, bug nahi.
+
+==============================================================
+[MODEL-FIX 23-Sep #2] CROP = 16:9 WINDOW (user ka final model) ✅
+==============================================================
+USER KA MODEL (ab implement):
+- SAARI cropping 16:9 window (player) par hoti hai — 9:16 sirf OUTPUT hai
+- Vertical screen: 16:9 par source-box DRAG/RESIZE (srcX/srcY/srcW) -> wahi
+  area 9:16 strip ko full fill karta hai; strip 9:16 par move/resize hoti hai
+- Shape screens: 9:16 par move/resize, content 16:9-crop se
+- S2 SOURCE SYSTEM REMOVED: "S2 missing" khatam — screens MAIN video se crop
+  (frontend spotMainVideoEl() = mainPlayer; export get_s2_frame() = current
+  source frame, zero extra decode)
+
+CHANGES:
+- spotlight.js: srcX/srcY/srcW per-screen fields (+legacy backfill),
+  16:9 player par source-box draw + capture-phase mousedown drag/resize
+  (rect-0 guard), preview main-video se content, vertical-add defaults
+  (srcX/srcY=0.5, srcW=0.25), 'S2 missing' -> 'video loading...'
+- export_engine.py: _burn_vertical_screen srcX/srcY/srcW mirror,
+  get_s2_frame() = main frame (compose call-site simplification)
+
+PROOF (live browser + backend):
+- Preview pixel: strip content srcX ke sath change (blue center -> green left) ✅
+- Player par source-box draw + drag (srcX 0.5->0.62) + resize (srcW 0.25->0.51) ✅
+- Export pixel: srcX=0.2 -> RED, srcX=0.8 -> BLUE, top/bottom full-height ✅
+- __stack2VideoEl gone, S2 clips nahi bante ✅
+- node --check + py_compile PASS ✅
+
+==============================================================
+[MODEL-FIX 23-Sep #3] 6-POINT RESIZE + SHAPE 16:9 PLACE + BORDER-LESS ✅
+==============================================================
+USER REQUIREMENTS (sab implement):
+1. VERTICAL BORDER-LESS: strip par koi white border nahi (preview + export)
+2. 6-POINT RESIZE: 2 top + 2 center + 2 bottom (L/R) — vertical strip 9:16
+   par AUR vertical source-box 16:9 par — dono same method
+3. SHAPES 16:9 PAR PLACE: shape outline 16:9 player par drag/6-point resize
+   (srcX/srcY/srcR) -> jo area shape ke andar select hua WAHI shape mein 9:16
+   par dikhta hai (base-box zoom legacy-fallback-only). 9:16 par zoom/size
+   sliders pehle jaise hi hain.
+
+FRONTEND (spotlight.js):
+- srcR field + migration backfill; addScreen/vertCb defaults
+- srcBoxPx/srcShapePx/srcBoxHandlePoints/srcShapeHandlePoints/
+  outStripHandlePoints helpers
+- player-canvas capture-mousedown: handles (6-point) -> body hit -> move;
+  6-point resize = opposite-edge FIXED (box: edge-follow, shape: r-diff)
+- preview vertical: 6-point resize (right-edge knob REMOVED);
+- drawSpotScreen: content = src-region square sample (srcR set ho to)
+- duplicateScreen: vertical src-fields copy (V1+V1Dup same source)
+- panel: border row vertical par hidden (spBorderRow id added)
+BACKEND (export_engine.py):
+- _burn_vertical_screen: border burn REMOVED (border-less)
+- _burn_spot_screen: srcR model (srcX/srcY/srcR region crop) + legacy fallback
+PROOF (live browser + numpy):
+- strip TR resize w 0.45->0.227 (opposite edge fixed) ✅
+- 16:9 box TL resize + shape body drag srcX 0.5->0.236 ✅
+- shape content srcX ke sath change (yellow left -> magenta right) ✅
+- export: shape center srcX=0.2 -> RED, srcX=0.85 -> BLUE, outside BLACK ✅
+- export: strip edge RED (border-less), bahar BLACK ✅
+- console CLEAN, node --check + py_compile PASS ✅
+================================================================
+NAYA SESSION (01 Oct): 4 NAYE LAYERS + SUBTITLES  ✅ PHASE 1 DONE (01 Oct)
+================================================================
+Timeline ab 7-layer hai (upar se neeche):
+  Captions | Transitions | Crop and Zoom | Color Grade | Video | Audio | Crop Segment
+Naya file: frontend/layers.js (effect-layers engine). Data timeline-state mein
+persist hota hai (captionSpans/transitions/panZoomSpans/gradeSpans) — undo/redo,
+split, copy/paste, duplicate, marquee, magnetic snap SAB in layers par kaam karte hain.
+
+1. CAPTIONS LAYER ✅
+- Auto-Captions generate hote hi full-span Captions layer banti hai (0 -> content-end)
+- SPLIT kar ke har piece ka apna STYLE/POSITION/SIZE — panel me change
+  PLAYHEAD wale piece par lagta hai (layer ke bahar par effect nahi)
+- Purane saves: cues the magar layer nahi -> load par khud layer ban jati hai
+
+2. TRANSITIONS ✅ (pehli dafa — pehle ZERO the)
+- Transition row me DRAG kar ke span banao (ya khali jagah par draw)
+- 6 types: Fade In / Fade Out / Crossfade / Slide Left / Slide Right / Zoom In
+- Customize: type + duration (0.2-3s) + intensity (10-100%) — span select
+  karne par right panel khulta hai. NO KEYFRAMING (user requirement)
+- SMART-AUTO: span ke andar clip-cut ho to crossfade REAL A+B blend usi cut par
+  (export me agle clip ka frame actually blend hota hai; preview approximation)
+
+3. CROP AND ZOOM (PAN & ZOOM) ✅
+- Layer row me span banao -> 9:16 preview me dashed BOX (corner handles)
+- Box DRAG = position, CORNER-drag = resize; span select = panel (Static/Zoom In/Zoom Out)
+- Zoom In/Out smoothstep-eased span-bhar chalta hai; layer ki lambai = zoom ki speed
+- Export me bilkul preview jaisa burn (region-crop -> full-frame stretch)
+
+4. COLOR GRADE LAYER ✅
+- Grade row me span banao -> Grade panel ka har change USI span par save hota hai
+- Split ke baad per-piece grade (piece-1 warm, piece-2 B&W waghera)
+- PURANA GLOBAL GRADE: load par ek full-span layer me MIGRATE ho jata hai
+  (frontend + export dono me) — kisi user ka saved grade zaya nahi hota
+
+5. SUBTITLES (SRT/TXT) ✅
+- Tools me "Subtitles" button -> media-bin ke neeche collapsible panel
+- Subtitles with timestamps dikhti hain; 2 buttons: SRT (HH:MM:SS,mmm)
+  aur TXT ([MM:SS - MM:SS] format — user choice)
+- TRANSCRIPTION CACHE: backend/data/<id>_transcript.json — same video par
+  dobara generate = 0.07s (whisper skip, cached:true). Subtitles lines bhi
+  <id>_subtitles.json me persist.
+
+6. EXPORT ENGINE MIRRORS ✅ (sab layers ki real burn-in)
+- grade-span burn (per-span grade) -> captions per-span style/position/scale
+  -> transition burn (real crossfade/slide/zoom) -> pan-zoom burn (sab se aakhir)
+- test-quality smoke export PASS (sab layers ke sath, error-free, 726KB file)
+
+LIVE-TESTED (browser + backend): layer rows render, drag/resize/create, panels,
+split per-piece, undo/redo, persistence (reload par sab wapis), subtitles cache,
+SRT/TXT endpoints, export smoke — SAB PASS, console clean.
+
+REMAINING (kal / agla session):
+- [ ] Per-span caption POSITION preview-drag me playhead-span par write
+      (abhi panel-path se hota hai — drag directly globals badalta hai)
+- [ ] Transition preview me pre-boundary crossfade ka doosra frame dikhana
+      (export me already real blend hai)
+- [ ] TEST-CHECKLIST me Section H likhna (7-layer user tests)
+- [ ] Video MOVE karne par effect-layers follow karein ya nahi —
+      user se poochh kar decide (abhi effect-layer apni jagah par rehti hai)
+
+==============================================================
+[PAUSE-POINT 02/03-Oct] USER BUG REPORT — 9 BUGS
+==============================================================
+********** UPDATE 03-Oct: SAB 9 FIX HO GAYE + LIVE-TESTED **********
+FIXES (commit ke sath):
+- #5/#6 RESIZE+MOVE: getItemInStack me effect-kind lookup (sab layers ke
+  resize/move ab chalte hain) + getSnapCandidates me effect-arrays
+- #3 PLAYHEAD: seekVirtual NaN-guards (timelineContentEnd + t) +
+  applyVirtualTime/capLoad try-catch (throw par bhi playhead update hota hai)
+- #7 CRASH: playbackTick DEATH-PROOF (throw par loop chalta rehta hai) +
+  snapshotCanvas SHARED-SCRATCH-CANVAS + param-key cache (naya canvas
+  har frame NAHI) + invalidateSnapshot() renderAll me + NaN self-heal
+- #1 BUTTONS: har effect-label par "＋" button (playhead par 2s span);
+  click-drag-create BAND (empty-click sirf selection clear); document-level
+  mousedown handler (buttons labels-column me hain)
+- #9 CAPTIONS: syncCaptionLayerFromCues NaN-guard + focus-restore wrapper
+  (alert ke baad app par wapis focus — dialog-focus hang khatam)
+- #2 ALIGNMENT: label-resize-spacer (5px x6) labels column me — live
+  measured: sab 7 rows ka diff 0.0px
+- #8 CROP-SEGMENT: A/D se segment ban raha hai (live-verified)
+- #4 ZOOM/TRANSITION: pz zoom pixel-proof (red->black center, factor 1.5);
+  zoom-in region 0.596->0.301; fadein pixel 102,0,0 (exact red*0.4)
+- LIVE TEST (real video, E2E): buttons->spans, transition resize 2->4s,
+  move 1->2s, grade resize, playhead seek+numpad, A/D segment, captions
+  layer/split, playback advance 1.77s — console ZERO errors
+******************************************************************
+(NEECHE ASLI ANALYSIS reference ke liye)
+
+User ne app test ki aur 9 bugs report kiye. USI DIN PAUSE — sirf analysis
++ lock hua, fix NAHI. FIX agle session me NEECHE WALE ORDER se shuru hoga.
+Har fix ke baad: node --check + py_compile + live test (preview_snapshot/
+evaluate/logs) + commit.
+
+[BUG 5/6] **SAB SE BARA — CONFIRMED ROOT**: Transition AUR Color-Grade span
+  ki length increase/decrease nahi hoti (move bhi nahi hota).
+  timeline.js getItemInStack(:149) sirf segment/audio/video samajhta hai —
+  effect-kinds (captionSpan/transition/panZoom/gradeSpan) ka kind line:152
+  video-fallback me chala jata hai -> undefined -> move-branch (:1571) har
+  item skip, resize-branch (:1587) early-return. SILENT fail.
+  FIX: mousemove/mouseup dono me pehle isEffectKind(kind) (:271) check —
+  haan to arrayOfEffectKind(kind).find(x=>x.id===id) (:264) use karo.
+
+[BUG 3] Playhead move nahi hota (shortkeys forward/backward par bhi).
+  STRONG SUSPECT (code-read): seekVirtual (timeline.js:871) me
+  `limit = timelineContentEnd > 0 ? timelineContentEnd : 0` — agar
+  timelineContentEnd NaN/undefined ho to limit=0 -> virtualTime HAMESHA 0
+  par clamp (playhead frozen). Doosra suspect: capLoadPlayheadSpanToGlobals
+  (:881, layers.js:199) unguarded — throw par shortkey-handler/tick break.
+  FIX: NaN-guard on timelineContentEnd + try/catch around cap-load.
+
+[BUG 7] Ziada der chalne ke baad crash; playhead kaam karna chhor deta hai.
+  STRONG SUSPECT: snapshotCanvas (layers.js:30) har call par NAYA canvas
+  banata hai — pz/trans apply (drawPreview) har-frame chalte hain -> 60fps
+  GC/memory pressure -> lambi session me freeze/crash.
+  FIX: conditional/cached snapshot (sirf jab span active ho + params change
+  hon), ya ek shared scratch-canvas reuse.
+
+[BUG 1] Har effect-layer par click/drag se segment ban jata hai. User ko
+  BUTTONS chahiye: press -> us layer me segment ban jaye.
+  CONFIRMED: layers.js setupEffectRow(:83) — trans/pz/grade rows par
+  allowCreate=true (empty-area drag = create). timeline.js:1635 mouseup
+  create-branch createEffectSpan call karta hai.
+  FIX: sab effect-rows allowCreate=false; har effect-layer ke label-row me
+  "+" button -> createEffectSpan(kind, playheadT, playheadT+2)
+  (layers.js:145 function ready hai).
+
+[BUG 4] Crop & Zoom: 9:16 window me box dikhta hai lekin zoom apply nahi hota.
+  SUSPECT: crop_editor.js:380-381/401-402 me pz/trans calls `try{}catch{}`
+  SILENT hain — asli error chhup jata hai. Ya virtualTime NaN / span
+  inactive. pzApplyToCanvas (layers.js:426) live-debug karna hoga.
+  NOTE: BUG 5 ka hissa bhi — "koi transition effect 9:16 output window me
+  nahi dikhta" — transApplyToCanvas (layers.js:556) preview path check karo.
+
+[BUG 8] Purana Crop Segment function toota — uski layer me segment nahi banta.
+  SUSPECT: 4 naye rows `<div class="tracks-area" id="tracksArea">` ke andar
+  (segmentsLayer/markerOverlay ke upar) — event/positioning conflict.
+  FIX: live test (A/D markers) + event-capture/stopPropagation check.
+
+[BUG 2] Timeline ki alignment kharab.
+  SUSPECT: trackHeights me 4 naye keys (36px) vs label-rows heights mismatch;
+  ruler spacer 36px. FIX: live visual check (preview_snapshot) + heights sync.
+
+[BUG 9] Auto-Captions generate -> crash + blank screen, kuch kaam nahi karta.
+  SUSPECT: render-loop exception — drawCaptionsOnCanvas wrapper globals
+  swap karta hai; capEffectiveParamsAt(virtualTime) me NaN/undefined ho
+  sakta hai. FIX: live reproduce + preview_logs se exact error pakdo.
+
+FIX ORDER (suggested): 5/6 -> 3 -> 7 -> 1 -> 9 -> 8/2 -> 4 (+transition
+preview). Ek bhi handler-fix (#5/6) pehle karo — baaki bugs isi family ke
+hain.
+
+FREEBUFF APP (user problem, app-level): har kholne par download isliye ke
+install kabhi complete nahi hota (network error beech me). VERIFIED 03-Oct:
+0.0.157 installer pending me COMPLETE para hai (~164MB + sha512 registered):
+  %LOCALAPPDATA%\@codebufffreebuff-desktop-updater\pending\Freebuff-0.0.157-win-x64.exe
+Freebuff BAND karo -> ye .exe manually run karo -> ek dafa install ho jaye
+to download-loop khatam. (0.0.135 ka bhi yehi pattern tha.)
